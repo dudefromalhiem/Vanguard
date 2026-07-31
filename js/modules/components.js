@@ -4,7 +4,8 @@ export async function loadComponents() {
   const promises = Array.from(elements).map(async (el) => {
     const componentName = el.getAttribute('data-component');
     try {
-      const response = await fetch(`./components/${componentName}.html`);
+      // Add a timestamp cache buster so GitHub Pages and localhost always load the latest component HTML
+      const response = await fetch(`./components/${componentName}.html?v=${new Date().getTime()}`);
       if (response.ok) {
         const html = await response.text();
         el.innerHTML = html;
