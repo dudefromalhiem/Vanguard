@@ -67,18 +67,8 @@
   position: relative;
 }
 .nav-more-btn {
-  background: none;
-  border: none;
-  font-family: 'Inter', sans-serif;
-  font-size: 0.8125rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: rgba(249, 246, 238, 0.8);
   cursor: pointer;
-  padding: 0;
-  padding-bottom: 0.25rem;
-  border-bottom: 1px solid transparent;
+  padding-bottom: 0.25rem !important;
 }
 .nav-more-btn:hover {
   color: var(--bg-color);
