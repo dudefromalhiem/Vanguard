@@ -62,4 +62,18 @@ export function initNavigation() {
       header.classList.toggle('sticky', window.scrollY > 50);
     });
   }
+
+  // Notification panel
+  const notificationTrigger = document.getElementById('notification-trigger');
+  const notificationPanel = document.getElementById('notification-panel');
+  if (notificationTrigger && notificationPanel) {
+    notificationTrigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      notificationPanel.classList.toggle('open');
+      if (moreDropdown && moreDropdown.classList.contains('open')) {
+        moreDropdown.classList.remove('open');
+      }
+    });
+    document.addEventListener('click', () => notificationPanel.classList.remove('open'));
+  }
 }
