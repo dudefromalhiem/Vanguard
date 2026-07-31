@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Projects by The Vanguard Society.">
+  <title>Projects — The Vanguard Society</title>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+  <header data-component="header"></header>
+  <main id="main-content">
+    <section class="section">
+      <div class="container-wide">
+        <div class="section-header">
+          <h2>Projects</h2>
+          <p class="text-secondary font-serif">Explore our initiatives and completed works.</p>
+        </div>
+        <form id="project-filters" class="filter-bar mb-4">
+          <div class="form-group" style="flex: 1;">
+            <select id="wing-select" name="wing" class="form-select">
+              <option value="">All Wings</option>
+              <option value="Leadership Wing">Leadership Wing</option>
+              <option value="Technical Wing">Technical Wing</option>
+            </select>
+          </div>
+          <div class="form-group" style="flex: 1;">
+            <select id="status-select" name="status" class="form-select">
+              <option value="">All Statuses</option>
+              <option value="completed">Completed</option>
+              <option value="ongoing">Ongoing</option>
+            </select>
+          </div>
+        </form>
+        <div id="projects-container" class="cards-grid"></div>
+
+        <!-- Project Detail Modal -->
+        <div id="project-modal" class="modal-overlay">
+          <div class="modal">
+            <div class="modal-header">
+              <h3 id="modal-title">Project Title</h3>
+              <button class="modal-close" onclick="document.getElementById('project-modal').classList.remove('open')">✕</button>
+            </div>
+            <div class="modal-body">
+              <span id="modal-status" class="badge badge-primary mb-4">Status</span>
+              <div id="modal-desc" class="content"></div>
+            </div>
+            <div class="modal-footer">
+              <a href="#" id="modal-repo-link" class="btn btn-secondary" target="_blank" style="display: none;">View Repository</a>
+              <button class="btn btn-primary" onclick="document.getElementById('project-modal').classList.remove('open')">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer data-component="footer"></footer>
+  <div data-component="search-overlay"></div>
+  <script type="module" src="/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+import { api } from '../modules/api.js';
+import { showToast } from '../modules/notifications.js';
+import { isMember } from '../modules/auth.js';
+
+export async function init() {
+    const activePollsContainer = document.getElementById('active-polls');
+    const pastPollsContainer = document.getElementById('past-polls');
+
+    async function loadPolls() {
+        try {
+            const res = await api.get('/api/public/polls');
+            if (!res.ok) throw new Error(res.error);
+            const polls = res.data;
+            const active = polls.filter(p => p.status === 'Active');
+            const past = polls.filter(p => p.status === 'Closed');
+
+            renderActivePolls(active);
+            renderPastPolls(past);
+        } catch (error) {
+            console.error('Error loading polls:', error);
+            showToast('Failed to load polls', 'error');
+        }
+    }
+
+    function renderActivePolls(polls) {
+        if (!activePollsContainer) return;
+        const listDiv = activePollsContainer.querySelector('#active-polls-list') || activePollsContainer;
+        
+        if (polls.length === 0) {
+            listDiv.innerHTML = '<p>No active polls at the moment.</p>';
+            return;
+        }
+
+        const authenticated = isMember();
+
+        listDiv.innerHTML = polls.map(poll => {
+            const voted = localStorage.getItem(`voted_poll_${poll.id}`);
+            
+            if (!authenticated) {
+                return `
+                    <div class="poll-card">
+                        <h3>${poll.title}</h3>
+                        <p style="color:var(--text-secondary);font-size:0.875rem;margin-bottom:1rem;">${poll.description || ''}</p>
+                        <p style="font-weight:600;">You must <a href="/login.html" style="color:var(--primary-color);">log in</a> to vote.</p>
+                    </div>
+                `;
+            }
+
+            if (voted) {
+                return `
+                    <div class="poll-card">
+                        <h3>${poll.title}</h3>
+                        <p>You have already voted in this poll.</p>
+                    </div>
+                `;
+            }
+
+            return `
+                <div class="poll-card" id="poll-${poll.id}">
+                    <h3>${poll.title}</h3>
+                    <p style="color:var(--text-secondary);font-size:0.875rem;margin-bottom:1rem;">${poll.description || ''}</p>
+                    <form onsubmit="window.submitVote(event, '${poll.id}')">
+                        ${poll.poll_options.map((opt) => `
+                            <div style="margin-bottom:0.5rem;display:flex;align-items:center;gap:0.5rem;">
+                                <input type="radio" name="option_id" value="${opt.id}" id="opt-${opt.id}" required>
+                                <label for="opt-${opt.id}">${opt.option_text}</label>
+                            </div>
+                        `).join('')}
+                        <button type="submit" class="btn btn-primary" style="margin-top:1rem;">Submit Vote</button>
+                    </form>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function renderPastPolls(polls) {
+        if (!pastPollsContainer) return;
+        const listDiv = pastPollsContainer.querySelector('#past-polls-list') || pastPollsContainer;
+        
+        if (polls.length === 0) {
+            listDiv.innerHTML = '<p>No past polls found.</p>';
+            return;
+        }
+
+        listDiv.innerHTML = polls.map(poll => {
+            const totalVotes = poll.poll_options.reduce((sum, opt) => sum + (opt.vote_count || 0), 0);
+            return `
+                <div class="poll-results">
+                    <h3>${poll.title}</h3>
+                    <div class="chart" style="margin-top:1.5rem;">
+                        ${poll.poll_options.map(opt => {
+                            const percent = totalVotes === 0 ? 0 : Math.round(((opt.vote_count || 0) / totalVotes) * 100);
+                            return `
+                                <div class="bar-row" style="margin-bottom:1rem;">
+                                    <div style="display:flex;justify-content:space-between;margin-bottom:0.25rem;">
+                                        <span class="label" style="font-size:0.875rem;">${opt.option_text}</span>
+                                        <span class="percent" style="font-size:0.875rem;font-weight:600;">${percent}% (${opt.vote_count || 0})</span>
+                                    </div>
+                                    <div class="bar-track" style="background:var(--border-color);height:8px;border-radius:4px;overflow:hidden;">
+                                        <div class="bar-fill" style="background:var(--primary-color);height:100%;width:${percent}%;transition:width 1s ease;"></div>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                    <p style="margin-top:1rem;font-size:0.875rem;color:var(--text-secondary);">Total votes: ${totalVotes}</p>
+                </div>
+            `;
+        }).join('');
+    }
+
+    window.submitVote = async (e, pollId) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const optionId = formData.get('option_id');
+
+        if (!optionId) return;
+        const btn = e.target.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        btn.textContent = 'Submitting...';
+
+        try {
+            const res = await api.post('/api/public/polls', { poll_id: pollId, option_id: optionId });
+            if (res.ok) {
+                localStorage.setItem(`voted_poll_${pollId}`, 'true');
+                showToast('Vote submitted successfully!', 'success');
+                loadPolls(); // reload
+            } else {
+                throw new Error(res.error);
+            }
+        } catch (error) {
+            showToast(error.message || 'Failed to submit vote', 'error');
+            btn.disabled = false;
+            btn.textContent = 'Submit Vote';
+        }
+    };
+
+    // Ensure we wait for auth state before rendering
+    setTimeout(() => {
+        loadPolls();
+    }, 100);
+}

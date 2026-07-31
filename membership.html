@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Membership of The Vanguard Society.">
+  <title>Membership — The Vanguard Society</title>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+  <header data-component="header"></header>
+  <main id="main-content">
+    <section id="benefits" class="section">
+      <div class="container">
+        <div class="section-header">
+          <h2>Benefits</h2>
+          <p>Discover the advantages of joining The Vanguard Society.</p>
+        </div>
+        <ul>
+          <li>Networking</li>
+          <li>Resources</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="eligibility" class="section">
+      <div class="container">
+        <div class="section-header">
+          <h2>Eligibility</h2>
+          <p>Who can join The Vanguard Society.</p>
+        </div>
+        <p>Students of ABC University</p>
+      </div>
+    </section>
+
+    <section id="application" class="section">
+      <div class="container">
+        <div class="section-header">
+          <h2>Application Form</h2>
+          <p>Submit your application to become a member.</p>
+        </div>
+        <form id="membership-form">
+          <div class="form-group">
+            <label class="form-label" for="mem-name">Name</label>
+            <input type="text" id="mem-name" name="name" class="form-input" placeholder="Name" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="mem-email">Email</label>
+            <input type="email" id="mem-email" name="email" class="form-input" placeholder="Email" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="mem-phone">Phone</label>
+            <input type="tel" id="mem-phone" name="phone" class="form-input" placeholder="Phone" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="mem-usn">USN</label>
+            <input type="text" id="mem-usn" name="usn" class="form-input" placeholder="USN" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="mem-branch">Branch</label>
+            <input type="text" id="mem-branch" name="branch" class="form-input" placeholder="Branch" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="mem-semester">Semester</label>
+            <input type="text" id="mem-semester" name="semester" class="form-input" placeholder="Semester" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="mem-password">Password</label>
+            <input type="password" id="mem-password" name="password" class="form-input" placeholder="Password" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="mem-confirm-password">Confirm Password</label>
+            <input type="password" id="mem-confirm-password" name="confirm-password" class="form-input" placeholder="Confirm Password" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="mem-preferred-wing">Preferred Wing</label>
+            <select id="mem-preferred-wing" name="preferred-wing" class="form-select" required>
+              <option value="leadership">Leadership</option>
+              <option value="technical">Technical</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="mem-why-join">Why do you want to join?</label>
+            <textarea id="mem-why-join" name="why-join" class="form-textarea" placeholder="Why do you want to join?" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Submit Application</button>
+        </form>
+      </div>
+    </section>
+
+    <section id="status-tracker" class="section">
+      <div class="container">
+        <div class="section-header">
+          <h2>Status Tracker</h2>
+          <p>Check the status of your application.</p>
+        </div>
+        <div id="status-result"></div>
+      </div>
+    </section>
+
+    <section id="faq" class="section">
+      <div class="container">
+        <div class="section-header">
+          <h2>FAQ</h2>
+          <p>Frequently asked questions.</p>
+        </div>
+        <div id="membership-faqs"></div>
+      </div>
+    </section>
+  </main>
+  <footer data-component="footer"></footer>
+  <div data-component="search-overlay"></div>
+  <script type="module" src="/js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="The Vanguard Society - Empowering students through technology and leadership.">
+  <title>The Vanguard Society</title>
+  <link rel="stylesheet" href="/css/main.css">
+  <style>
+    /* Editorial cover specific styles */
+    .hero-section {
+      padding: 6rem 0 4rem;
+      border-bottom: 2px solid var(--primary-color);
+      background-color: var(--bg-color);
+    }
+    .hero-editorial {
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+    }
+    .hero-title-container {
+      text-align: center;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 3rem;
+      margin-bottom: 1rem;
+    }
+    .hero-title {
+      font-size: 4rem;
+      font-weight: 400;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      color: var(--primary-color);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    @media (min-width: 768px) {
+      .hero-title { font-size: 6rem; }
+    }
+    .hero-subtitle {
+      font-size: 1.25rem;
+      color: var(--text-secondary);
+      max-width: 700px;
+      margin: 0 auto;
+      line-height: 1.6;
+      font-style: italic;
+    }
+    .hero-columns {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    @media (min-width: 768px) {
+      .hero-columns { 
+        grid-template-columns: 2fr 1fr;
+        gap: 3rem;
+      }
+      .hero-columns > div:first-child {
+        border-right: 1px solid var(--border-color);
+        padding-right: 3rem;
+      }
+    }
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+  <header data-component="header"></header>
+  
+  <main id="main-content">
+    <section class="hero-section">
+      <div class="container container-wide">
+        <div class="hero-editorial">
+          <div class="hero-title-container">
+            <h1 class="hero-title">The Vanguard Society</h1>
+            <p class="hero-subtitle">A prestigious student-led forum for debate, leadership, research, and public speaking at NIE Mysuru, shaping the next generation of innovators.</p>
+          </div>
+          
+          <div class="hero-columns">
+            <div>
+              <p class="dropcap">Founded in 2026, The Vanguard Society serves as the premier platform for intellectual discourse and technical innovation at our institution. We bridge the gap between academic theory and real-world leadership through our two core divisions: The Leadership Wing and The Technical Wing.</p>
+              <p>Our members engage in weekly parliamentary debates, publish technical research papers, and organize campus-wide hackathons. Through rigorous peer review and public speaking forums, we empower students to become thought leaders in their respective fields.</p>
+              <p><em>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in dui mauris. Vivamus hendrerit arcu sed erat molestie vehicula. Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor.</em></p>
+              
+              <div class="hero-actions" style="margin-top:2.5rem;">
+                <a href="/events.html" class="btn btn-primary">Upcoming Sessions</a>
+                <a href="/about.html" class="btn btn-secondary">Read Our Manifesto</a>
+              </div>
+            </div>
+            <div>
+              <h4 style="border-bottom:1px solid var(--border-color);padding-bottom:0.5rem;">At a Glance</h4>
+              <ul style="list-style:none;margin-top:1rem;display:flex;flex-direction:column;gap:1rem;">
+                <li style="display:flex;justify-content:space-between;border-bottom:1px solid var(--border-color);padding-bottom:0.5rem;">
+                  <span class="text-secondary font-serif">Founded</span> <span class="text-primary font-serif">2026</span>
+                </li>
+                <li style="display:flex;justify-content:space-between;border-bottom:1px solid var(--border-color);padding-bottom:0.5rem;">
+                  <span class="text-secondary font-serif">Divisions</span> <span class="text-primary font-serif">2 Wings</span>
+                </li>
+                <li style="display:flex;justify-content:space-between;border-bottom:1px solid var(--border-color);padding-bottom:0.5rem;">
+                  <span class="text-secondary font-serif">Focus</span> <span class="text-primary font-serif">Debate & Research</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <section id="where-to-begin" class="section">
+      <div class="container container-wide">
+        <div class="section-header editorial-split">
+          <div>
+            <h2>Editorial Overview</h2>
+          </div>
+          <div>
+            <p>Explore our curated selections of ongoing projects, resources, and upcoming parliamentary debates.</p>
+          </div>
+        </div>
+        <div class="cards-grid wide">
+          <a href="/events.html" class="card hoverable">
+            <div class="card-body">
+              <span class="text-tertiary" style="font-family:'Inter',sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;display:block;margin-bottom:0.5rem;">Schedule</span>
+              <h3>Upcoming Debates & Seminars</h3>
+              <p class="text-muted" style="margin-bottom:0;">Register for upcoming sessions hosted by the Leadership and Technical wings.</p>
+            </div>
+          </a>
+          <a href="/resources.html" class="card hoverable">
+            <div class="card-body">
+              <span class="text-tertiary" style="font-family:'Inter',sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;display:block;margin-bottom:0.5rem;">Library</span>
+              <h3>Academic Resources</h3>
+              <p class="text-muted" style="margin-bottom:0;">Access our curated library of articles, research guides, and technical tools.</p>
+            </div>
+          </a>
+          <a href="/projects.html" class="card hoverable">
+            <div class="card-body">
+              <span class="text-tertiary" style="font-family:'Inter',sans-serif;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;display:block;margin-bottom:0.5rem;">Initiatives</span>
+              <h3>Research & Projects</h3>
+              <p class="text-muted" style="margin-bottom:0;">View the open-source initiatives and research papers driven by our members.</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dynamically populated sections by home.js -->
+    <section id="featured-event" class="section"></section>
+    <section id="active-poll" class="section bg-secondary"></section>
+    <section id="stats-section" class="section"></section>
+    <section id="latest-news" class="section bg-secondary"></section>
+    <section id="countdown" class="section"></section>
+  </main>
+  
+  <footer data-component="footer"></footer>
+  <div data-component="search-overlay"></div>
+  <script type="module" src="/js/app.js"></script>
+</body>
+</html>
