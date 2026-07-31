@@ -140,11 +140,13 @@ p {
 .text-primary { color: var(--text-primary); }
 .font-serif { font-family: 'Lora', Georgia, serif; }
 
-.container {
+.container, .container-wide {
   width: 100%;
-  max-width: 900px; /* Narrower for editorial reading width */
   margin: 0 auto;
   padding: 0 1.5rem;
+}
+.container {
+  max-width: 900px; /* Narrower for editorial reading width */
 }
 .container-wide {
   max-width: 1200px;

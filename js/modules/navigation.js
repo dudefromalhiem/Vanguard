@@ -27,10 +27,19 @@ export function initNavigation() {
   }
 
   // Active link
-  const path = window.location.pathname.replace(/\/$/, '') || '/index.html';
+  const pathParts = window.location.pathname.split('/');
+  const filename = pathParts[pathParts.length - 1] || 'index.html';
+  
   document.querySelectorAll('.nav-link, .mobile-nav-link').forEach(link => {
-    const href = link.getAttribute('href');
-    if (href && (path.endsWith(href) || (href === '/' && (path === '' || path === '/index.html')))) {
+    let href = link.getAttribute('href');
+    if (!href) return;
+    
+    // Normalize href for matching
+    if (href.startsWith('./')) href = href.substring(2);
+    if (href === '') href = 'index.html';
+    
+    // If the filename starts with the href or vice versa, mark it active
+    if (filename === href || (href === 'index.html' && filename === '')) {
       link.classList.add('active');
     }
   });

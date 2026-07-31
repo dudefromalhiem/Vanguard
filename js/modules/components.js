@@ -4,7 +4,7 @@ export async function loadComponents() {
   const promises = Array.from(elements).map(async (el) => {
     const componentName = el.getAttribute('data-component');
     try {
-      const response = await fetch(`/components/${componentName}.html`);
+      const response = await fetch(`./components/${componentName}.html`);
       if (response.ok) {
         const html = await response.text();
         el.innerHTML = html;

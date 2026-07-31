@@ -9,21 +9,21 @@ export function initSearch() {
   const close = document.getElementById('close-search');
 
   const staticLinks = [
-    { title: 'Home', url: '/', type: 'page', desc: 'The Vanguard Society landing page' },
-    { title: 'About Us', url: '/about.html', type: 'page', desc: 'Our mission, vision, and history' },
-    { title: 'Events & Sessions', url: '/events.html', type: 'page', desc: 'Upcoming parliamentary debates and hackathons' },
-    { title: 'News & Announcements', url: '/news.html', type: 'page', desc: 'Latest updates from the society' },
-    { title: 'Society Wings', url: '/wings.html', type: 'page', desc: 'The Leadership and Technical divisions' },
-    { title: 'Active Polls', url: '/polls.html', type: 'page', desc: 'Vote on upcoming initiatives' },
-    { title: 'Research & Projects', url: '/projects.html', type: 'page', desc: 'Open-source initiatives and research papers' },
-    { title: 'Team & Faculty', url: '/team.html', type: 'page', desc: 'Core committee members and faculty advisors' },
-    { title: 'Gallery', url: '/gallery.html', type: 'page', desc: 'Photos from past events' },
-    { title: 'Resources', url: '/resources.html', type: 'page', desc: 'Curated library of articles and tools' },
-    { title: 'Membership', url: '/membership.html', type: 'page', desc: 'Join The Vanguard Society' },
-    { title: 'Alumni Network', url: '/alumni.html', type: 'page', desc: 'Connect with former members' },
-    { title: 'Contact Us', url: '/contact.html', type: 'page', desc: 'Get in touch with the core committee' },
-    { title: 'FAQs', url: '/faqs.html', type: 'page', desc: 'Frequently asked questions' },
-    { title: 'Admin Login', url: '/admin.html', type: 'page', desc: 'Restricted administrative portal' },
+    { title: 'Home', url: './index.html', type: 'page', desc: 'The Vanguard Society landing page' },
+    { title: 'About Us', url: './about.html', type: 'page', desc: 'Our mission, vision, and history' },
+    { title: 'Events & Sessions', url: './events.html', type: 'page', desc: 'Upcoming parliamentary debates and hackathons' },
+    { title: 'News & Announcements', url: './news.html', type: 'page', desc: 'Latest updates from the society' },
+    { title: 'Society Wings', url: './wings.html', type: 'page', desc: 'The Leadership and Technical divisions' },
+    { title: 'Active Polls', url: './polls.html', type: 'page', desc: 'Vote on upcoming initiatives' },
+    { title: 'Research & Projects', url: './projects.html', type: 'page', desc: 'Open-source initiatives and research papers' },
+    { title: 'Team & Faculty', url: './team.html', type: 'page', desc: 'Core committee members and faculty advisors' },
+    { title: 'Gallery', url: './gallery.html', type: 'page', desc: 'Photos from past events' },
+    { title: 'Resources', url: './resources.html', type: 'page', desc: 'Curated library of articles and tools' },
+    { title: 'Membership', url: './membership.html', type: 'page', desc: 'Join The Vanguard Society' },
+    { title: 'Alumni Network', url: './alumni.html', type: 'page', desc: 'Connect with former members' },
+    { title: 'Contact Us', url: './contact.html', type: 'page', desc: 'Get in touch with the core committee' },
+    { title: 'FAQs', url: './faqs.html', type: 'page', desc: 'Frequently asked questions' },
+    { title: 'Admin Login', url: './admin.html', type: 'page', desc: 'Restricted administrative portal' },
   ];
 
   let currentSelectedIndex = -1;
@@ -42,13 +42,13 @@ export function initSearch() {
     
     const sections = [
       { key: 'pages', label: 'Page', linkBase: '' },
-      { key: 'news', label: 'News', linkBase: '/news.html#' },
-      { key: 'events', label: 'Event', linkBase: '/events.html#' },
-      { key: 'projects', label: 'Project', linkBase: '/projects.html#' },
-      { key: 'polls', label: 'Poll', linkBase: '/polls.html#' },
-      { key: 'resources', label: 'Resource', linkBase: '/resources.html' },
-      { key: 'team', label: 'Member', linkBase: '/team.html' },
-      { key: 'faqs', label: 'FAQ', linkBase: '/faqs.html' }
+      { key: 'news', label: 'News', linkBase: './news.html#' },
+      { key: 'events', label: 'Event', linkBase: './events.html#' },
+      { key: 'projects', label: 'Project', linkBase: './projects.html#' },
+      { key: 'polls', label: 'Poll', linkBase: './polls.html#' },
+      { key: 'resources', label: 'Resource', linkBase: './resources.html' },
+      { key: 'team', label: 'Member', linkBase: './team.html' },
+      { key: 'faqs', label: 'FAQ', linkBase: './faqs.html' }
     ];
 
     for (const s of sections) {
