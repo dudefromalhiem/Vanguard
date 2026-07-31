@@ -79,7 +79,9 @@
   padding: 0;
   padding-bottom: 0.25rem;
   border-bottom: 1px solid transparent;
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
 }
 .nav-more-btn:hover {
   color: var(--bg-color);
