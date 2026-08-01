@@ -18,8 +18,8 @@
 body.page-admin {
   background-color: var(--admin-bg-peach) !important;
   color: var(--admin-text-dark) !important;
-  /* Navy Blue Wallpaper Pattern Effect on top of Peach/Off-white Background */
-  background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20.5V18H0v-2h20v-2H0v-2h20v-2H0V8h20V6H0V4h20V2H0V0h22v20h2V0h2v20h2V0h2v20h2V0h2v20h2V0h2v20h2v2H20v-1.5zM0 20h2v20H0V20zm4 0h2v20H4V20zm4 0h2v20h-2V20zm4 0h2v20h-2V20zm4 4h20v2H20v-2zm0 4h20v2H20v-2zm0 4h20v2H20v-2zm0 4h20v2H20v-2z' fill='%230A192F' fill-opacity='0.06' fill-rule='evenodd'/%3E%3C/svg%3E") !important;
+  /* Distinct Architectural Navy Lattice & Mustard Gold Accent Wallpaper Pattern */
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg stroke='%230A192F' stroke-width='1.2' stroke-opacity='0.09'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3Ccircle fill='%23D4941E' fill-opacity='0.12' cx='30' cy='30' r='2.5'/%3E%3Cpath d='M0 30L30 0M30 60L60 30' stroke='%230A192F' stroke-width='1' stroke-opacity='0.05'/%3E%3C/g%3E%3C/svg%3E") !important;
   min-height: 100vh;
 }
 
