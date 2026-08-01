@@ -23,45 +23,50 @@ export default async function handler(req, res) {
 
     if (err) return error(res, err.message, 500);
     return success(res, { data, count, limit, offset });
-  } else if (req.method === 'PUT') {
+  } else if (req.method === 'PUT' || req.method === 'POST') {
     const body = await parseBody(req);
-    const { id, status, admin_notes } = body;
+    let id = body.id || body.applicationId;
+    let status = body.status;
+    
+    if (body.action === 'approve') status = 'approved';
+    if (body.action === 'reject') status = 'rejected';
 
-    if (!id || !status) return error(res, 'Missing id or status', 400);
+    if (!id || !status) return error(res, 'Missing application id or status', 400);
 
     const { data: currentApp, error: fetchErr } = await db.from('membership_applications').select('*').eq('id', id).single();
     if (fetchErr || !currentApp) return error(res, 'Application not found', 404);
 
     const { data: updatedApp, error: updateErr } = await db.from('membership_applications')
-      .update({ status, admin_notes })
+      .update({ status: status, admin_notes: body.admin_notes || '' })
       .eq('id', id)
       .select()
       .single();
 
-    if (updateErr) return error(res, updateErr.message, 500);
+    if (updateErr) return error(res, 'Failed to update application: ' + updateErr.message, 500);
 
-    if (status === 'accepted' && currentApp.status !== 'accepted') {
+    // If approved, create/promote user in members table so they can log in!
+    if (status === 'approved' || status === 'accepted') {
       const { error: insertErr } = await db.from('members').insert({
         name: currentApp.name,
         email: currentApp.email,
-        phone: currentApp.phone,
-        usn: currentApp.usn,
-        branch: currentApp.branch,
-        preferred_wing: currentApp.preferred_wing,
         password_hash: currentApp.password_hash,
-        is_active: true
+        role: 'member'
       });
-      if (insertErr) return error(res, 'Failed to create member record: ' + insertErr.message, 500);
+      
+      // Ignore unique email error if member already exists
+      if (insertErr && insertErr.code !== '23505') {
+        return error(res, 'Failed to create member record: ' + insertErr.message, 500);
+      }
     }
 
     try {
-      await notifyApplicationStatus(updatedApp.email, updatedApp.name, status);
+      await notifyApplicationStatus(currentApp.email, currentApp.name, status);
     } catch (e) {
       console.error('Email notification failed', e);
     }
 
-    return success(res, updatedApp);
+    return success(res, { message: `Application ${status} successfully`, app: updatedApp });
   } else {
-    return methodNotAllowed(res, ['GET', 'PUT']);
+    return methodNotAllowed(res, ['GET', 'PUT', 'POST']);
   }
 }
