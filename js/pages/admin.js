@@ -108,12 +108,14 @@ export async function init() {
     tbody.innerHTML = '<tr><td colspan="4">Loading members...</td></tr>';
     
     const res = await api.get('/api/admin/membership');
-    if (res.ok && Array.isArray(res.data)) {
-      if (res.data.length === 0) {
+    const items = res.ok && res.data ? (Array.isArray(res.data.data) ? res.data.data : (Array.isArray(res.data) ? res.data : [])) : [];
+    
+    if (res.ok) {
+      if (items.length === 0) {
         tbody.innerHTML = '<tr><td colspan="4">No active members found</td></tr>';
         return;
       }
-      tbody.innerHTML = res.data.map(m => `
+      tbody.innerHTML = items.map(m => `
         <tr>
           <td>${m.name || 'N/A'}</td>
           <td>${m.email || 'N/A'}</td>
@@ -134,12 +136,14 @@ export async function init() {
     tbody.innerHTML = '<tr><td colspan="4">Loading events...</td></tr>';
 
     const res = await api.get('/api/admin/events');
-    if (res.ok && Array.isArray(res.data)) {
-      if (res.data.length === 0) {
+    const items = res.ok && res.data ? (Array.isArray(res.data.data) ? res.data.data : (Array.isArray(res.data) ? res.data : [])) : [];
+
+    if (res.ok) {
+      if (items.length === 0) {
         tbody.innerHTML = '<tr><td colspan="4">No events created yet</td></tr>';
         return;
       }
-      tbody.innerHTML = res.data.map(e => `
+      tbody.innerHTML = items.map(e => `
         <tr>
           <td>${e.title}</td>
           <td>${new Date(e.date || e.created_at).toLocaleDateString()}</td>
@@ -160,12 +164,14 @@ export async function init() {
     tbody.innerHTML = '<tr><td colspan="4">Loading applications...</td></tr>';
 
     const res = await api.get('/api/admin/membership?status=pending');
-    if (res.ok && Array.isArray(res.data)) {
-      if (res.data.length === 0) {
+    const items = res.ok && res.data ? (Array.isArray(res.data.data) ? res.data.data : (Array.isArray(res.data) ? res.data : [])) : [];
+
+    if (res.ok) {
+      if (items.length === 0) {
         tbody.innerHTML = '<tr><td colspan="4">No pending applications</td></tr>';
         return;
       }
-      tbody.innerHTML = res.data.map(app => `
+      tbody.innerHTML = items.map(app => `
         <tr>
           <td>${app.name}</td>
           <td>${app.email}</td>
