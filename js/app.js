@@ -17,23 +17,25 @@ document.addEventListener('componentsLoaded', () => {
   initAuthUI();
 
   // Auto-load page-specific JS
-  // Auto-load page-specific JS
   const pathParts = window.location.pathname.split('/');
-  const filename = pathParts[pathParts.length - 1] || 'index.html';
+  let rawFilename = pathParts[pathParts.length - 1] || 'index.html';
+  if (!rawFilename) rawFilename = 'index.html';
+  const pageKey = rawFilename.replace(/\.html$/, '');
+
   const pageMap = {
-    '': 'home', 'index.html': 'home',
-    'about.html': 'about', 'events.html': 'events',
-    'wings.html': 'wings', 'news.html': 'news',
-    'polls.html': 'polls', 'projects.html': 'projects',
-    'team.html': 'team', 'gallery.html': 'gallery',
-    'resources.html': 'resources', 'contact.html': 'contact',
-    'membership.html': 'membership', 'alumni.html': 'alumni',
-    'partners.html': 'partners', 'publications.html': 'publications',
-    'faqs.html': 'faqs', 'dashboard.html': 'dashboard',
-    'portal.html': 'portal', 'admin.html': 'admin'
+    '': 'home', 'index': 'home',
+    'about': 'about', 'events': 'events',
+    'wings': 'wings', 'news': 'news',
+    'polls': 'polls', 'projects': 'projects',
+    'team': 'team', 'gallery': 'gallery',
+    'resources': 'resources', 'contact': 'contact',
+    'membership': 'membership', 'alumni': 'alumni',
+    'partners': 'partners', 'publications': 'publications',
+    'faqs': 'faqs', 'dashboard': 'dashboard',
+    'portal': 'portal', 'admin': 'admin', 'login': 'login'
   };
 
-  const pageName = pageMap[filename] || null;
+  const pageName = pageMap[pageKey] || null;
   if (pageName) {
     import(`./pages/${pageName}.js`)
       .then(mod => { if (mod.init) mod.init(); })
