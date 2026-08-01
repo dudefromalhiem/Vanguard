@@ -2,6 +2,33 @@ import { api } from '../modules/api.js';
 import { showToast } from '../modules/notifications.js';
 import { isMember } from '../modules/auth.js';
 
+function compressImageFile(file, maxWidth = 1000, quality = 0.7) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let width = img.width;
+        let height = img.height;
+        if (width > maxWidth) {
+          height = Math.round((height * maxWidth) / width);
+          width = maxWidth;
+        }
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = () => resolve(e.target.result);
+      img.src = e.target.result;
+    };
+    reader.onerror = () => resolve(null);
+    reader.readAsDataURL(file);
+  });
+}
+
 export async function init() {
     const activePollsContainer = document.getElementById('active-polls');
     const pastPollsContainer = document.getElementById('past-polls');
@@ -169,13 +196,7 @@ export async function init() {
             let finalImageUrl = mediaUrlInput;
 
             if (fileInput && fileInput.files && fileInput.files[0]) {
-                const file = fileInput.files[0];
-                finalImageUrl = await new Promise((resolve) => {
-                    const reader = new FileReader();
-                    reader.onload = (evt) => resolve(evt.target.result);
-                    reader.onerror = () => resolve(mediaUrlInput);
-                    reader.readAsDataURL(file);
-                });
+                finalImageUrl = await compressImageFile(fileInput.files[0]);
             }
 
             try {
