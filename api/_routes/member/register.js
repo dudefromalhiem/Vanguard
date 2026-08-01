@@ -19,19 +19,15 @@ export default async function handler(req, res) {
   const payload = {
     name: body.name,
     email: body.email,
-    phone: body.phone || null,
-    branch: body.branch || null,
-    semester: body.semester || null,
-    why_join: body.why_join || body['why-join'] || null,
     password_hash: password_hash,
-    status: 'pending'
+    role: 'pending'
   };
 
-  const { data, error: dbError } = await db.from('membership_applications').insert([payload]).select().single();
+  const { data, error: dbError } = await db.from('members').insert([payload]).select().single();
 
   if (dbError) {
     if (dbError.code === '23505') {
-      return error(res, 'Email already in use for an application or membership', 409);
+      return error(res, 'Email already registered or application pending', 409);
     }
     return error(res, 'Failed to submit application: ' + dbError.message, 500);
   }

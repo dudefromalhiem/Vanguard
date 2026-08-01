@@ -15,22 +15,19 @@ export default async function handler(req, res) {
     }
 
     const db = getDb();
-    const { data: application, error: dbError } = await db
-      .from('membership_applications')
-      .select('status, created_at, reviewed_at')
+    const { data: member, error: dbError } = await db
+      .from('members')
+      .select('name, email, role, created_at')
       .eq('email', body.email)
-      .order('created_at', { ascending: false })
-      .limit(1)
       .single();
 
-    if (dbError || !application) {
+    if (dbError || !member) {
       return error(res, 'Application not found', 404);
     }
 
     return success(res, {
-      status: application.status,
-      applied_at: application.created_at,
-      reviewed_at: application.reviewed_at
+      status: member.role,
+      applied_at: member.created_at
     });
   } catch (err) {
     return error(res, err.message, 500);

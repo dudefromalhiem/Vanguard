@@ -14,10 +14,11 @@ export default async function handler(req, res) {
     const query = parseQuery(req);
     const { limit, offset } = paginate(query);
     
-    const tableName = query.type === 'members' ? 'members' : 'membership_applications';
-    let supabaseQuery = db.from(tableName).select('*', { count: 'exact' });
-    if (query.status && tableName === 'membership_applications') {
-      supabaseQuery = supabaseQuery.eq('status', query.status);
+    let supabaseQuery = db.from('members').select('*', { count: 'exact' });
+    if (query.status === 'pending') {
+      supabaseQuery = supabaseQuery.eq('role', 'pending');
+    } else if (query.type === 'members') {
+      supabaseQuery = supabaseQuery.neq('role', 'pending').neq('role', 'rejected');
     }
     
     const { data, count, error: err } = await supabaseQuery
@@ -29,52 +30,23 @@ export default async function handler(req, res) {
   } else if (req.method === 'PUT' || req.method === 'POST') {
     const body = await parseBody(req);
     let id = body.id || body.applicationId;
-    let status = body.status;
-    
-    if (body.action === 'approve') status = 'approved';
-    if (body.action === 'reject') status = 'rejected';
+    let action = body.action || body.status;
 
-    if (!id || !status) return error(res, 'Missing application id or status', 400);
+    if (!id) return error(res, 'Missing member id', 400);
 
-    const { data: currentApp, error: fetchErr } = await db.from('membership_applications').select('*').eq('id', id).single();
-    if (fetchErr || !currentApp) return error(res, 'Application not found', 404);
+    let targetRole = 'member';
+    if (action === 'reject' || action === 'rejected') targetRole = 'rejected';
+    if (action === 'approve' || action === 'approved' || action === 'accepted') targetRole = 'member';
 
-    const { data: updatedApp, error: updateErr } = await db.from('membership_applications')
-      .update({ status: status, admin_notes: body.admin_notes || '' })
+    const { data: updatedMember, error: updateErr } = await db.from('members')
+      .update({ role: targetRole })
       .eq('id', id)
       .select()
       .single();
 
-    if (updateErr) return error(res, 'Failed to update application: ' + updateErr.message, 500);
+    if (updateErr) return error(res, 'Failed to update member status: ' + updateErr.message, 500);
 
-    // If approved, create/promote user in members table (never demote existing admins or super admins!)
-    if (status === 'approved' || status === 'accepted') {
-      const hash = currentApp.password_hash || await hashPassword('VanguardMember123!');
-      
-      const { data: existingUser } = await db.from('members').select('*').eq('email', currentApp.email).single();
-      
-      if (!existingUser) {
-        await db.from('members').insert({
-          name: currentApp.name,
-          email: currentApp.email,
-          password_hash: hash,
-          role: 'member'
-        });
-      } else {
-        // Upgrade role to 'member' ONLY IF user is currently 'public' (NEVER demote admin or super_admin!)
-        if (existingUser.role !== 'admin' && existingUser.role !== 'super_admin' && existingUser.role !== 'superadmin') {
-          await db.from('members').update({ role: 'member' }).eq('email', currentApp.email);
-        }
-      }
-    }
-
-    try {
-      await notifyApplicationStatus(currentApp.email, currentApp.name, status);
-    } catch (e) {
-      console.error('Email notification failed', e);
-    }
-
-    return success(res, { message: `Application ${status} successfully`, app: updatedApp });
+    return success(res, { message: `Member status updated to ${targetRole} successfully`, app: updatedMember });
   } else {
     return methodNotAllowed(res, ['GET', 'PUT', 'POST']);
   }
