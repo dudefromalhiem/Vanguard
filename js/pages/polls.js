@@ -172,34 +172,8 @@ export async function init() {
         loadPolls();
     }, 100);
 
-    // Modal Open/Close for Public Community Poll Creation
-    const openBtn = document.getElementById('btn-open-public-poll-modal');
-    const closeBtn = document.getElementById('btn-close-public-poll-modal');
-    const pollModal = document.getElementById('modal-public-poll');
+    // Inline Public Community Poll Creation Form
     const pollForm = document.getElementById('form-public-create-poll');
-
-    // Custom File Dropzone interaction
-    const dropzoneTrigger = document.getElementById('dropzone-trigger');
-    const fileInput = document.getElementById('public-poll-file');
-    const dropzoneLabel = document.getElementById('dropzone-label');
-
-    if (dropzoneTrigger && fileInput) {
-        dropzoneTrigger.addEventListener('click', () => fileInput.click());
-        fileInput.addEventListener('change', () => {
-            if (fileInput.files && fileInput.files[0]) {
-                if (dropzoneLabel) {
-                    dropzoneLabel.innerHTML = `📷 Selected: <strong>${fileInput.files[0].name}</strong>`;
-                }
-            }
-        });
-    }
-
-    if (openBtn && pollModal) {
-        openBtn.addEventListener('click', () => pollModal.classList.add('open'));
-    }
-    if (closeBtn && pollModal) {
-        closeBtn.addEventListener('click', () => pollModal.classList.remove('open'));
-    }
 
     if (pollForm) {
         pollForm.addEventListener('submit', async (e) => {
@@ -212,7 +186,7 @@ export async function init() {
 
             const submitBtn = pollForm.querySelector('button[type="submit"]');
             submitBtn.disabled = true;
-            submitBtn.textContent = 'Launching Poll...';
+            submitBtn.textContent = 'Creating Poll...';
 
             let finalImageUrl = mediaUrlInput;
 
@@ -229,18 +203,17 @@ export async function init() {
                 });
 
                 if (res.ok) {
-                    showToast('Community Poll launched successfully!', 'success');
-                    if (pollModal) pollModal.classList.remove('open');
+                    showToast('Community Poll created successfully!', 'success');
                     pollForm.reset();
                     loadPolls();
                 } else {
-                    throw new Error(res.error || 'Failed to launch poll');
+                    throw new Error(res.error || 'Failed to create poll');
                 }
             } catch (err) {
                 showToast(err.message, 'error');
             } finally {
                 submitBtn.disabled = false;
-                submitBtn.textContent = 'Launch Poll';
+                submitBtn.textContent = 'Create Poll';
             }
         });
     }

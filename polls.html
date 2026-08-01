@@ -22,80 +22,49 @@
       </div>
     </section>
 
-    <section id="active-polls" class="section" style="padding-top: 0;">
-      <div class="container">
-        <div class="section-header" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
-          <div>
-            <h2>Community Polls</h2>
-            <p>Participate in member-created topics and ideas.</p>
-          </div>
-          <button class="btn btn-primary" id="btn-open-public-poll-modal">+ Create Community Poll</button>
-        </div>
-        <div class="cards-grid">
-          <div id="community-polls-list"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Redesigned Create Poll Modal for Public/Members -->
-    <div class="admin-modal-overlay" id="modal-public-poll">
-      <div class="premium-modal-box">
-        <div class="premium-modal-header">
-          <div>
-            <span class="badge badge-primary" style="margin-bottom: 0.5rem; background: var(--accent-color); color: #fff; border: none;">Vanguard Forums</span>
-            <h3 style="font-family: 'Lora', serif; font-size: 1.75rem; color: var(--text-primary); margin-bottom: 0.25rem;">Create Community Poll</h3>
-            <p style="font-size: 0.875rem; color: var(--text-secondary);">Start an active discussion or poll for the entire campus community.</p>
-          </div>
-          <button class="modal-close-btn" id="btn-close-public-poll-modal" style="font-size: 1.75rem; background: none; border: none; cursor: pointer; color: var(--text-tertiary);">&times;</button>
+    <section id="create-poll-section" class="section" style="border-top: 1px solid var(--border-color);">
+      <div class="container" style="max-width: 800px;">
+        <div class="section-header">
+          <h2>Create a Community Poll</h2>
+          <p>Start an active discussion or poll for the campus community.</p>
         </div>
 
-        <form id="form-public-create-poll" style="padding: 1.75rem;">
+        <form id="form-public-create-poll">
           <div class="form-group">
             <label class="form-label" for="public-poll-question">Poll Question</label>
-            <input type="text" class="styled-input" id="public-poll-question" required placeholder="e.g. What guest speaker topic should we host next?">
+            <input type="text" class="form-input" id="public-poll-question" required placeholder="What event or topic should Vanguard organize next?">
           </div>
 
           <div class="form-group">
-            <label class="form-label" for="public-poll-options">Voting Options <span style="font-weight:400; text-transform:none; color:var(--text-tertiary);">(Separate options with commas)</span></label>
-            <input type="text" class="styled-input" id="public-poll-options" required placeholder="AI in Healthcare, Quantum Computing, Web3 & DeFi">
+            <label class="form-label" for="public-poll-options">Voting Options (Separate with commas)</label>
+            <input type="text" class="form-input" id="public-poll-options" required placeholder="AI Workshop, Debate Tournament, Hackathon">
           </div>
 
           <div class="form-group">
             <label class="form-label" for="public-poll-duration">Active Duration</label>
-            <div class="duration-select-wrapper">
-              <select id="public-poll-duration" class="styled-select">
-                <option value="24">⏳ 24 Hours (1 Day)</option>
-                <option value="48">⏳ 48 Hours (2 Days)</option>
-                <option value="72">⏳ 3 Days</option>
-                <option value="168">⏳ 7 Days (1 Week)</option>
-                <option value="720">⏳ 30 Days</option>
-              </select>
-            </div>
+            <select id="public-poll-duration" class="form-select">
+              <option value="24">24 Hours (1 Day)</option>
+              <option value="48">48 Hours (2 Days)</option>
+              <option value="72">3 Days</option>
+              <option value="168">7 Days (1 Week)</option>
+              <option value="720">30 Days</option>
+            </select>
           </div>
 
           <div class="form-group">
-            <label class="form-label">Attached Cover Image <span style="font-weight:400; text-transform:none; color:var(--text-tertiary);">(Pick from device or paste link)</span></label>
-            <div class="file-dropzone" id="dropzone-trigger">
-              <input type="file" id="public-poll-file" accept="image/*" style="display: none;">
-              <div class="dropzone-content">
-                <div class="dropzone-icon">📷</div>
-                <div class="dropzone-text" id="dropzone-label"><strong>Click to select an image</strong> from your device</div>
-                <div class="dropzone-sub">PNG, JPG, WEBP up to 10MB (Auto-compressed)</div>
-              </div>
-            </div>
+            <label class="form-label" for="public-poll-file">Upload Cover Image from Device (Optional)</label>
+            <input type="file" class="form-input" id="public-poll-file" accept="image/*">
           </div>
 
           <div class="form-group">
-            <label class="form-label" for="public-poll-media-url">Or Image / Media URL</label>
-            <input type="url" class="styled-input" id="public-poll-media-url" placeholder="https://images.unsplash.com/... or media link">
+            <label class="form-label" for="public-poll-media-url">Or Image / Media URL (Optional)</label>
+            <input type="url" class="form-input" id="public-poll-media-url" placeholder="https://images.unsplash.com/... or media link">
           </div>
 
-          <button type="submit" class="btn-launch-poll">
-            🚀 Launch Community Poll
-          </button>
+          <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">Create Poll</button>
         </form>
       </div>
-    </div>
+    </section>
     
     <section id="past-polls" class="section">
       <div class="container">
