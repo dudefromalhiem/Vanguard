@@ -431,8 +431,12 @@ export async function init() {
 
   window.deleteItem = async (entity, id) => {
     if (confirm(`Delete this item from ${entity}?`)) {
-      const res = await api.del(`/api/admin/${entity}/${id}`);
-      if (res.ok) loadAllData();
+      const res = await api.del(`/api/admin/${entity}?id=${id}`);
+      if (res.ok) {
+        loadAllData();
+      } else {
+        alert('Failed to delete item: ' + (res.error || 'Unknown error'));
+      }
     }
   };
 

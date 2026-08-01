@@ -98,6 +98,19 @@ export default async function handler(req, res) {
     // Exact match
     let routeHandler = routes[pathname];
     
+    if (!routeHandler) {
+      // Fallback for path parameters (e.g. /api/admin/polls/UUID -> /api/admin/polls)
+      const parts = pathname.split('/');
+      while (parts.length > 2) {
+        parts.pop();
+        const parentPath = parts.join('/');
+        if (routes[parentPath]) {
+          routeHandler = routes[parentPath];
+          break;
+        }
+      }
+    }
+    
     if (routeHandler) {
       return await routeHandler(req, res);
     } else {

@@ -120,11 +120,20 @@ export default async function handler(req, res) {
     let pollId = query.id || (req.query?.slug && req.query.slug.length > 2 ? req.query.slug[2] : null);
     if (!pollId && req.url) {
       const parts = req.url.split('?')[0].split('/');
-      pollId = parts[parts.length - 1];
+      const last = parts[parts.length - 1];
+      if (last !== 'polls') pollId = last;
     }
 
     if (!pollId || pollId === 'polls') return error(res, 'Missing id parameter', 400);
     
+    // Clean up dependent child rows safely
+    try {
+      await db.from('poll_votes').delete().eq('poll_id', pollId);
+      await db.from('poll_options').delete().eq('poll_id', pollId);
+    } catch (e) {
+      console.warn('Poll child deletion warning:', e);
+    }
+
     const { error: dbError } = await db.from('polls').delete().eq('id', pollId);
     if (dbError) return error(res, dbError.message, 500);
     return success(res, { message: 'Deleted successfully' });
