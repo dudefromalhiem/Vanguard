@@ -77,30 +77,12 @@ export async function init() {
             }
 
             if (voted) {
-                const totalVotes = (poll.poll_options || []).reduce((sum, opt) => sum + (opt.vote_count || 0), 0);
                 return `
                     <div class="poll-card">
                         ${imageHtml}
-                        <span class="badge badge-primary" style="margin-bottom:0.5rem; background: var(--accent-color); color:#fff; border:none;">Voted</span>
+                        <span class="badge" style="margin-bottom:0.5rem; background: #166534; color:#fff; border:none;">✓ Vote Submitted</span>
                         <h3>${poll.title}</h3>
-                        <p style="color:var(--text-secondary);font-size:0.875rem;margin-bottom:1rem;">${poll.description || ''}</p>
-                        <div class="chart" style="margin-top:1rem;">
-                            ${(poll.poll_options || []).map(opt => {
-                                const percent = totalVotes === 0 ? 0 : Math.round(((opt.vote_count || 0) / totalVotes) * 100);
-                                return `
-                                    <div class="bar-row" style="margin-bottom:0.75rem;">
-                                        <div style="display:flex;justify-content:space-between;margin-bottom:0.25rem;">
-                                            <span style="font-size:0.875rem;font-weight:500;">${opt.option_text}</span>
-                                            <span style="font-size:0.875rem;font-weight:600;">${percent}% (${opt.vote_count || 0})</span>
-                                        </div>
-                                        <div style="background:var(--border-color);height:8px;border-radius:4px;overflow:hidden;">
-                                            <div style="background:var(--accent-color);height:100%;width:${percent}%;transition:width 0.8s ease;"></div>
-                                        </div>
-                                    </div>
-                                `;
-                            }).join('')}
-                        </div>
-                        <p style="margin-top:0.75rem;font-size:0.75rem;color:var(--text-tertiary);">Total votes: ${totalVotes}</p>
+                        <p style="color:var(--text-secondary);font-size:0.875rem;margin-top:0.5rem;">Thank you for participating! Results will be revealed in Past Polls once this poll closes.</p>
                     </div>
                 `;
             }
