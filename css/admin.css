@@ -1,52 +1,44 @@
-/* Vanguard Admin Panel Dedicated Stylesheet - Obsidian Charcoal & Mustard Gold Theme (Zero Blue) */
+/* Vanguard Admin Panel Dedicated Stylesheet - Off-White Peach & Mustard Yellow Theme with Navy Wallpaper */
 :root {
   --admin-gold: #D4941E;
   --admin-gold-hover: #EAB308;
   --admin-gold-dark: #A36F10;
-  --admin-bg-dark: #121214;
-  --admin-card-bg: #1A1A1E;
-  --admin-card-border: #2D2D35;
-  --admin-input-bg: #222228;
-  --admin-input-border: #3F3F46;
-  --admin-text-light: #F4F4F5;
-  --admin-text-muted: #A1A1AA;
-  --admin-danger: #EF4444;
-  --admin-success: #10B981;
-  --admin-warning: #F59E0B;
+  --admin-bg-peach: #F9F6EE; /* Same peach/off-white cream as home page */
+  --admin-card-bg: #FFFFFF;
+  --admin-card-border: #D5CBB9;
+  --admin-input-bg: #FFFFFF;
+  --admin-input-border: #D5CBB9;
+  --admin-text-dark: #0A192F; /* Navy Blue text */
+  --admin-text-muted: #546E7A;
+  --admin-danger: #DC2626;
+  --admin-success: #059669;
+  --admin-warning: #D97706;
 }
 
 body.page-admin {
-  background-color: var(--admin-bg-dark) !important;
-  color: var(--admin-text-light) !important;
-  /* Dedicated Warm Gold Dot Pattern Wallpaper */
-  background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23D4941E' fill-opacity='0.07' fill-rule='evenodd'%3E%3Cpath d='M0 40L40 0H20L0 20M40 40V20L20 40'/%3E%3C/g%3E%3C/svg%3E") !important;
+  background-color: var(--admin-bg-peach) !important;
+  color: var(--admin-text-dark) !important;
+  /* Navy Blue Wallpaper Pattern Effect on top of Peach/Off-white Background */
+  background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20.5V18H0v-2h20v-2H0v-2h20v-2H0V8h20V6H0V4h20V2H0V0h22v20h2V0h2v20h2V0h2v20h2V0h2v20h2V0h2v20h2v2H20v-1.5zM0 20h2v20H0V20zm4 0h2v20H4V20zm4 0h2v20h-2V20zm4 0h2v20h-2V20zm4 4h20v2H20v-2zm0 4h20v2H20v-2zm0 4h20v2H20v-2zm0 4h20v2H20v-2z' fill='%230A192F' fill-opacity='0.06' fill-rule='evenodd'/%3E%3C/svg%3E") !important;
   min-height: 100vh;
 }
 
-/* Header Overrides for Admin Page - Remove Blue Header */
+/* Header Overrides - Keep Same Crimson Red Header as Home Page */
 body.page-admin .site-header {
-  background-color: #121214 !important;
-  background-image: none !important;
-  border-bottom: 2px solid var(--admin-gold) !important;
+  background-color: #8B0000 !important; /* Crimson Red Header */
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 12 12' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 12L12 1M-1 10L10 -1M3 14L14 3' stroke='%23ffffff' stroke-opacity='0.08' stroke-width='1.5' fill='none'/%3E%3C/svg%3E") !important;
+  border-bottom: 2px solid #0A192F !important;
 }
 
 body.page-admin .site-header .nav-link,
 body.page-admin .site-header .icon-btn,
 body.page-admin .site-header .nav-brand {
-  color: var(--admin-text-light) !important;
+  color: rgba(249, 246, 238, 0.9) !important;
 }
 
 body.page-admin .site-header .nav-link:hover,
 body.page-admin .site-header .nav-brand:hover {
-  color: var(--admin-gold) !important;
-}
-
-body.page-admin .nav-more-dropdown,
-body.page-admin .profile-dropdown-menu,
-body.page-admin .notification-panel {
-  background-color: #1A1A1E !important;
-  background-image: none !important;
-  border: 1px solid var(--admin-card-border) !important;
+  color: #FFFFFF !important;
 }
 
 /* Admin Wrapper */
@@ -65,15 +57,15 @@ body.page-admin .notification-panel {
   background: var(--admin-card-bg);
   border: 1px solid var(--admin-card-border);
   border-left: 5px solid var(--admin-gold);
-  border-radius: 8px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  border-radius: 6px;
+  box-shadow: 0 10px 25px rgba(10, 25, 47, 0.08);
   margin-bottom: 2rem;
 }
 
 .admin-title-group h1 {
   font-family: 'Lora', serif;
   font-size: 2.25rem;
-  color: var(--admin-text-light);
+  color: var(--admin-text-dark);
   margin-bottom: 0.25rem;
 }
 
@@ -98,17 +90,17 @@ body.page-admin .notification-panel {
 .admin-stat-card {
   background: var(--admin-card-bg);
   border: 1px solid var(--admin-card-border);
-  border-radius: 8px;
+  border-radius: 6px;
   padding: 1.5rem 1.75rem;
   position: relative;
   overflow: hidden;
-  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 15px rgba(10, 25, 47, 0.05);
+  transition: transform 0.2s ease, border-color 0.2s ease;
 }
 
 .admin-stat-card:hover {
   transform: translateY(-3px);
   border-color: var(--admin-gold);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
 }
 
 .admin-stat-card::before {
@@ -131,10 +123,10 @@ body.page-admin .notification-panel {
   font-size: 2.5rem;
   font-family: 'Lora', serif;
   font-weight: 700;
-  color: var(--admin-text-light);
+  color: var(--admin-text-dark);
 }
 
-/* Rehauled Navigation Tabs */
+/* Navigation Tabs */
 .admin-tabs-nav {
   display: flex;
   gap: 0.625rem;
@@ -165,11 +157,11 @@ body.page-admin .notification-panel {
 }
 
 .admin-tab-btn.active {
-  color: #121214;
+  color: #0A192F;
   background: var(--admin-gold);
   border-color: var(--admin-gold);
   font-weight: 700;
-  box-shadow: 0 4px 12px rgba(212, 148, 30, 0.3);
+  box-shadow: 0 4px 12px rgba(212, 148, 30, 0.25);
 }
 
 /* Tab Panes */
@@ -198,7 +190,7 @@ body.page-admin .notification-panel {
 .pane-header h3 {
   font-family: 'Lora', serif;
   font-size: 1.75rem;
-  color: var(--admin-text-light);
+  color: var(--admin-text-dark);
   margin: 0;
 }
 
@@ -227,10 +219,10 @@ body.page-admin .notification-panel {
 .admin-form-group textarea {
   width: 100%;
   padding: 0.875rem 1.25rem;
-  background: var(--admin-input-bg) !important;
+  background: #FFFFFF !important;
   border: 1px solid var(--admin-input-border) !important;
   border-radius: 6px !important;
-  color: var(--admin-text-light) !important;
+  color: var(--admin-text-dark) !important;
   font-family: 'Inter', sans-serif;
   font-size: 0.9375rem;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
@@ -251,7 +243,7 @@ body.page-admin .notification-panel {
 .login-btn,
 .btn-admin-gold {
   background: linear-gradient(135deg, var(--admin-gold) 0%, var(--admin-gold-hover) 100%) !important;
-  color: #121214 !important;
+  color: #0A192F !important;
   border: none !important;
   border-radius: 6px !important;
   padding: 0.875rem 1.75rem !important;
@@ -271,13 +263,13 @@ body.page-admin .notification-panel {
 .login-btn:hover,
 .btn-admin-gold:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(212, 148, 30, 0.4) !important;
+  box-shadow: 0 6px 20px rgba(212, 148, 30, 0.35) !important;
 }
 
 .btn-admin-outline {
-  background: transparent !important;
-  color: var(--admin-text-light) !important;
-  border: 1px solid var(--admin-input-border) !important;
+  background: #FFFFFF !important;
+  color: var(--admin-text-dark) !important;
+  border: 1px solid var(--admin-card-border) !important;
   border-radius: 6px !important;
   padding: 0.75rem 1.5rem !important;
   font-family: 'Inter', sans-serif !important;
@@ -290,16 +282,16 @@ body.page-admin .notification-panel {
 .btn-admin-outline:hover {
   border-color: var(--admin-gold) !important;
   color: var(--admin-gold) !important;
-  background: rgba(212, 148, 30, 0.1) !important;
+  background: rgba(212, 148, 30, 0.08) !important;
 }
 
 /* Tables */
 .admin-table-container {
   background: var(--admin-card-bg);
   border: 1px solid var(--admin-card-border);
-  border-radius: 8px;
+  border-radius: 6px;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 20px rgba(10, 25, 47, 0.05);
 }
 
 .admin-table {
@@ -311,8 +303,8 @@ body.page-admin .notification-panel {
 }
 
 .admin-table th {
-  background: #151518;
-  color: var(--admin-gold);
+  background: #F3EFE0;
+  color: var(--admin-text-dark);
   padding: 1.125rem 1.5rem;
   font-size: 0.75rem;
   text-transform: uppercase;
@@ -324,7 +316,7 @@ body.page-admin .notification-panel {
 .admin-table td {
   padding: 1.125rem 1.5rem;
   border-bottom: 1px solid var(--admin-card-border);
-  color: var(--admin-text-light);
+  color: var(--admin-text-dark);
 }
 
 .admin-table tbody tr:hover {
@@ -342,17 +334,17 @@ body.page-admin .notification-panel {
   border-radius: 4px;
 }
 
-.badge-pending { background: rgba(245, 158, 11, 0.15); color: var(--admin-warning); border: 1px solid var(--admin-warning); }
-.badge-approved { background: rgba(16, 185, 129, 0.15); color: var(--admin-success); border: 1px solid var(--admin-success); }
-.badge-rejected { background: rgba(239, 68, 68, 0.15); color: var(--admin-danger); border: 1px solid var(--admin-danger); }
+.badge-pending { background: rgba(217, 119, 6, 0.15); color: var(--admin-warning); border: 1px solid var(--admin-warning); }
+.badge-approved { background: rgba(5, 150, 105, 0.15); color: var(--admin-success); border: 1px solid var(--admin-success); }
+.badge-rejected { background: rgba(220, 38, 38, 0.15); color: var(--admin-danger); border: 1px solid var(--admin-danger); }
 .badge-active { background: rgba(212, 148, 30, 0.15); color: var(--admin-gold); border: 1px solid var(--admin-gold); }
 
 /* Modals */
 .admin-modal-overlay {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(6px);
+  background: rgba(10, 25, 47, 0.6);
+  backdrop-filter: blur(4px);
   display: none;
   align-items: center;
   justify-content: center;
@@ -365,7 +357,7 @@ body.page-admin .notification-panel {
 }
 
 .admin-modal-box {
-  background: var(--admin-card-bg);
+  background: #FFFFFF;
   border: 1px solid var(--admin-card-border);
   border-top: 5px solid var(--admin-gold);
   border-radius: 8px;
@@ -374,7 +366,7 @@ body.page-admin .notification-panel {
   max-height: 90vh;
   overflow-y: auto;
   padding: 2.25rem;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 20px 50px rgba(10, 25, 47, 0.25);
   position: relative;
 }
 
@@ -390,7 +382,7 @@ body.page-admin .notification-panel {
 .admin-modal-header h4 {
   font-family: 'Lora', serif;
   font-size: 1.5rem;
-  color: var(--admin-text-light);
+  color: var(--admin-text-dark);
   margin: 0;
 }
 

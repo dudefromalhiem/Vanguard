@@ -56,12 +56,6 @@ export async function initAuthUI() {
       joinBtnDesktop.textContent = linkText;
       joinBtnDesktop.style.display = 'inline-flex';
     }
-
-    if (desktopNavLinks) {
-      const li = document.createElement('li');
-      li.innerHTML = `<a href="#" class="nav-link" id="logout-btn">Logout</a>`;
-      desktopNavLinks.appendChild(li);
-    }
     
     if (mobileDrawer) {
       const btnContainer = mobileDrawer.querySelector('div:last-child');
