@@ -54,25 +54,36 @@ const routerCode = `${imports}
 ${routeMap}
 export default async function handler(req, res) {
   try {
-    const url = new URL(req.url, \`http://\${req.headers.host}\`);
-    let pathname = url.pathname;
+    let pathname = '';
+    
+    // Vercel catch-all passes req.query.slug array
+    if (req.query && req.query.slug) {
+      const slugArr = Array.isArray(req.query.slug) ? req.query.slug : [req.query.slug];
+      pathname = '/api/' + slugArr.join('/');
+    } else if (req.url) {
+      pathname = req.url.split('?')[0];
+    }
+    
+    // Normalize trailing slash
+    if (pathname.length > 1 && pathname.endsWith('/')) {
+      pathname = pathname.slice(0, -1);
+    }
     
     // Exact match
     let routeHandler = routes[pathname];
     
-    // Handle optional trailing slash
-    if (!routeHandler && pathname.endsWith('/')) {
-      routeHandler = routes[pathname.slice(0, -1)];
-    }
-    
     if (routeHandler) {
-      return routeHandler(req, res);
+      return await routeHandler(req, res);
     } else {
-      return res.status(404).json({ error: 'Route not found: ' + pathname });
+      res.statusCode = 404;
+      res.setHeader('Content-Type', 'application/json');
+      return res.end(JSON.stringify({ error: 'Route not found: ' + pathname }));
     }
   } catch (err) {
-    console.error('Router error:', err);
-    return res.status(500).json({ error: 'Internal Server Error' });
+    console.error('Router execution error:', err);
+    res.statusCode = 500;
+    res.setHeader('Content-Type', 'application/json');
+    return res.end(JSON.stringify({ error: err.message || 'Internal Server Error' }));
   }
 }
 `;
