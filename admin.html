@@ -79,7 +79,6 @@
                 <button class="admin-tab-btn" data-target="tab-events">Events & Activities</button>
                 <button class="admin-tab-btn" data-target="tab-news">News & Articles</button>
                 <button class="admin-tab-btn" data-target="tab-polls">Community Polls</button>
-                <button class="admin-tab-btn" data-target="tab-gallery">Media Gallery (Images/Videos)</button>
             </div>
 
             <!-- Tab Panes -->
@@ -136,8 +135,8 @@
                 <!-- 3. Events Tab -->
                 <div class="admin-pane" id="tab-events">
                     <div class="pane-header">
-                        <h3>Scheduled Events</h3>
-                        <button class="btn-admin-gold" id="btn-open-event-modal">+ Create Event</button>
+                        <h3>Events & Activities</h3>
+                        <button class="btn-admin-gold" id="btn-open-event-modal">+ Create Event (with Media)</button>
                     </div>
                     <div class="admin-table-container">
                         <table class="admin-table">
@@ -146,7 +145,7 @@
                                     <th>Event Title</th>
                                     <th>Date</th>
                                     <th>Location</th>
-                                    <th>Category</th>
+                                    <th>Attached Media</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -160,8 +159,8 @@
                 <!-- 4. News Tab -->
                 <div class="admin-pane" id="tab-news">
                     <div class="pane-header">
-                        <h3>News & Editorial Articles</h3>
-                        <button class="btn-admin-gold" id="btn-open-news-modal">+ Publish Article</button>
+                        <h3>News & Articles</h3>
+                        <button class="btn-admin-gold" id="btn-open-news-modal">+ Publish Article (with Media)</button>
                     </div>
                     <div class="admin-table-container">
                         <table class="admin-table">
@@ -170,7 +169,7 @@
                                     <th>Article Title</th>
                                     <th>Author</th>
                                     <th>Category</th>
-                                    <th>Published Date</th>
+                                    <th>Attached Media</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -185,7 +184,7 @@
                 <div class="admin-pane" id="tab-polls">
                     <div class="pane-header">
                         <h3>Community Polls</h3>
-                        <button class="btn-admin-gold" id="btn-open-poll-modal">+ Create Poll</button>
+                        <button class="btn-admin-gold" id="btn-open-poll-modal">+ Create Poll (with Media)</button>
                     </div>
                     <div class="admin-table-container">
                         <table class="admin-table">
@@ -194,36 +193,12 @@
                                     <th>Poll Question</th>
                                     <th>Status</th>
                                     <th>Options</th>
-                                    <th>Created At</th>
+                                    <th>Attached Media</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody id="polls-table-body">
                                 <tr><td colspan="5">Loading polls...</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- 6. Media Gallery Tab -->
-                <div class="admin-pane" id="tab-gallery">
-                    <div class="pane-header">
-                        <h3>Showcase Media (Photos & Videos)</h3>
-                        <button class="btn-admin-gold" id="btn-open-media-modal">+ Upload Media</button>
-                    </div>
-                    <div class="admin-table-container">
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Title</th>
-                                    <th>Type</th>
-                                    <th>URL / Media Link</th>
-                                    <th>Category</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="gallery-table-body">
-                                <tr><td colspan="5">Loading media showcase...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -234,7 +209,7 @@
 
     <!-- Modals -->
 
-    <!-- Modal 1: Create Event -->
+    <!-- Modal 1: Create Event (with Photo/Video/Audio) -->
     <div class="admin-modal-overlay" id="modal-event">
         <div class="admin-modal-box">
             <div class="admin-modal-header">
@@ -259,15 +234,23 @@
                     <textarea id="event-description" rows="3" required placeholder="Event details..."></textarea>
                 </div>
                 <div class="admin-form-group">
-                    <label for="event-image">Cover Image URL</label>
-                    <input type="url" id="event-image" placeholder="https://images.unsplash.com/...">
+                    <label for="event-media-type">Attachment Media Type (Picture / Video / Audio)</label>
+                    <select id="event-media-type">
+                        <option value="image">Picture / Cover Image</option>
+                        <option value="video">Video (YouTube / Vimeo / MP4)</option>
+                        <option value="audio">Audio / Podcast (Spotify / SoundCloud / MP3)</option>
+                    </select>
+                </div>
+                <div class="admin-form-group">
+                    <label for="event-media-url">Media Attachment URL</label>
+                    <input type="url" id="event-media-url" placeholder="https://images.unsplash.com/... or https://youtube.com/...">
                 </div>
                 <button type="submit" class="btn-admin-gold" style="width: 100%; justify-content: center; margin-top: 1rem;">Publish Event</button>
             </form>
         </div>
     </div>
 
-    <!-- Modal 2: Publish News -->
+    <!-- Modal 2: Publish News (with Photo/Video/Audio) -->
     <div class="admin-modal-overlay" id="modal-news">
         <div class="admin-modal-box">
             <div class="admin-modal-header">
@@ -297,15 +280,23 @@
                     <textarea id="news-body" rows="4" required placeholder="Article body text..."></textarea>
                 </div>
                 <div class="admin-form-group">
-                    <label for="news-image">Header Image URL</label>
-                    <input type="url" id="news-image" placeholder="https://images.unsplash.com/...">
+                    <label for="news-media-type">Attachment Media Type (Picture / Video / Audio)</label>
+                    <select id="news-media-type">
+                        <option value="image">Picture / Header Image</option>
+                        <option value="video">Video (YouTube / Vimeo / MP4)</option>
+                        <option value="audio">Audio / Podcast (Spotify / SoundCloud / MP3)</option>
+                    </select>
+                </div>
+                <div class="admin-form-group">
+                    <label for="news-media-url">Media Attachment URL</label>
+                    <input type="url" id="news-media-url" placeholder="https://images.unsplash.com/... or https://youtube.com/...">
                 </div>
                 <button type="submit" class="btn-admin-gold" style="width: 100%; justify-content: center; margin-top: 1rem;">Publish Article</button>
             </form>
         </div>
     </div>
 
-    <!-- Modal 3: Create Poll -->
+    <!-- Modal 3: Create Poll (with Photo/Video/Audio) -->
     <div class="admin-modal-overlay" id="modal-poll">
         <div class="admin-modal-box">
             <div class="admin-modal-header">
@@ -321,39 +312,20 @@
                     <label for="poll-options">Poll Options (Comma separated)</label>
                     <input type="text" id="poll-options" required placeholder="AI & Machine Learning, Web3 Development, Cybersecurity">
                 </div>
-                <button type="submit" class="btn-admin-gold" style="width: 100%; justify-content: center; margin-top: 1rem;">Launch Poll</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal 4: Add Media Item (Images/Videos) -->
-    <div class="admin-modal-overlay" id="modal-media">
-        <div class="admin-modal-box">
-            <div class="admin-modal-header">
-                <h4>Add Showcase Media</h4>
-                <button class="modal-close-btn" onclick="window.closeModals()">&times;</button>
-            </div>
-            <form id="form-add-media">
                 <div class="admin-form-group">
-                    <label for="media-title">Media Title</label>
-                    <input type="text" id="media-title" required placeholder="Annual General Body Meeting Highlight">
-                </div>
-                <div class="admin-form-group">
-                    <label for="media-type">Media Type</label>
-                    <select id="media-type">
-                        <option value="image">Photo / Image</option>
-                        <option value="video">Video Showcase</option>
+                    <label for="poll-media-type">Optional Attachment Type (Picture / Video / Audio)</label>
+                    <select id="poll-media-type">
+                        <option value="none">None (Text Only)</option>
+                        <option value="image">Picture / Diagram</option>
+                        <option value="video">Video Clip</option>
+                        <option value="audio">Audio Clip</option>
                     </select>
                 </div>
                 <div class="admin-form-group">
-                    <label for="media-url">Direct Media / Video Embed URL</label>
-                    <input type="url" id="media-url" required placeholder="https://images.unsplash.com/... or https://youtube.com/...">
+                    <label for="poll-media-url">Media Attachment URL</label>
+                    <input type="url" id="poll-media-url" placeholder="https://images.unsplash.com/... or https://youtube.com/...">
                 </div>
-                <div class="admin-form-group">
-                    <label for="media-description">Caption / Description</label>
-                    <input type="text" id="media-description" placeholder="Brief description...">
-                </div>
-                <button type="submit" class="btn-admin-gold" style="width: 100%; justify-content: center; margin-top: 1rem;">Add to Showcase</button>
+                <button type="submit" class="btn-admin-gold" style="width: 100%; justify-content: center; margin-top: 1rem;">Launch Poll</button>
             </form>
         </div>
     </div>

@@ -120,23 +120,27 @@ export async function init() {
     const eventModal = document.getElementById('modal-event');
     const newsModal = document.getElementById('modal-news');
     const pollModal = document.getElementById('modal-poll');
-    const mediaModal = document.getElementById('modal-media');
 
     document.getElementById('btn-open-event-modal')?.addEventListener('click', () => eventModal?.classList.add('open'));
     document.getElementById('btn-open-news-modal')?.addEventListener('click', () => newsModal?.classList.add('open'));
     document.getElementById('btn-open-poll-modal')?.addEventListener('click', () => pollModal?.classList.add('open'));
-    document.getElementById('btn-open-media-modal')?.addEventListener('click', () => mediaModal?.classList.add('open'));
 
-    // Modal Form Submits
+    // Modal Form Submits with Picture/Video/Audio support
     document.getElementById('form-create-event')?.addEventListener('submit', async (e) => {
       e.preventDefault();
+      const mediaType = document.getElementById('event-media-type').value;
+      const mediaUrl = document.getElementById('event-media-url').value;
+      
       const body = {
         title: document.getElementById('event-title').value,
         event_date: document.getElementById('event-date').value,
         location: document.getElementById('event-location').value,
         description: document.getElementById('event-description').value,
-        image_url: document.getElementById('event-image').value
+        image_url: mediaUrl,
+        media_type: mediaType,
+        media_url: mediaUrl
       };
+
       const res = await api.post('/api/admin/events', body);
       if (res.ok) {
         alert('Event created successfully!');
@@ -149,13 +153,19 @@ export async function init() {
 
     document.getElementById('form-publish-news')?.addEventListener('submit', async (e) => {
       e.preventDefault();
+      const mediaType = document.getElementById('news-media-type').value;
+      const mediaUrl = document.getElementById('news-media-url').value;
+
       const body = {
         title: document.getElementById('news-title').value,
         author: document.getElementById('news-author').value,
         category: document.getElementById('news-category').value,
         body: document.getElementById('news-body').value,
-        image_url: document.getElementById('news-image').value
+        image_url: mediaUrl,
+        media_type: mediaType,
+        media_url: mediaUrl
       };
+
       const res = await api.post('/api/admin/news', body);
       if (res.ok) {
         alert('Article published successfully!');
@@ -170,10 +180,16 @@ export async function init() {
       e.preventDefault();
       const rawOptions = document.getElementById('poll-options').value;
       const optionsArr = rawOptions.split(',').map(s => s.trim()).filter(Boolean);
+      const mediaType = document.getElementById('poll-media-type').value;
+      const mediaUrl = document.getElementById('poll-media-url').value;
+
       const body = {
         title: document.getElementById('poll-question').value,
-        options: optionsArr
+        options: optionsArr,
+        media_type: mediaType,
+        media_url: mediaUrl
       };
+
       const res = await api.post('/api/admin/polls', body);
       if (res.ok) {
         alert('Poll created successfully!');
@@ -181,24 +197,6 @@ export async function init() {
         loadPolls();
       } else {
         alert('Failed to create poll: ' + (res.error || 'Unknown error'));
-      }
-    });
-
-    document.getElementById('form-add-media')?.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const body = {
-        title: document.getElementById('media-title').value,
-        type: document.getElementById('media-type').value,
-        media_url: document.getElementById('media-url').value,
-        description: document.getElementById('media-description').value
-      };
-      const res = await api.post('/api/admin/gallery', body);
-      if (res.ok) {
-        alert('Media added to showcase!');
-        window.closeModals();
-        loadGallery();
-      } else {
-        alert('Failed to add media: ' + (res.error || 'Unknown error'));
       }
     });
   }
@@ -214,7 +212,6 @@ export async function init() {
     loadEvents();
     loadNews();
     loadPolls();
-    loadGallery();
   }
 
   window.refreshApplications = loadApplications;
@@ -298,7 +295,7 @@ export async function init() {
         <td><strong>${escapeHtml(e.title)}</strong></td>
         <td>${new Date(e.event_date || e.created_at).toLocaleDateString()}</td>
         <td>${escapeHtml(e.location || 'Online')}</td>
-        <td><span class="badge badge-active">${escapeHtml(e.category || 'General')}</span></td>
+        <td><span class="badge badge-active">${escapeHtml(e.media_type || 'image')}</span> ${e.media_url ? `<a href="${escapeHtml(e.media_url)}" target="_blank" style="color: var(--admin-gold); text-decoration: underline;">View</a>` : 'None'}</td>
         <td>
           <button class="btn-admin-outline" style="padding: 0.25rem 0.625rem; font-size: 0.75rem; color: #ef4444;" onclick="window.deleteItem('events', '${e.id}')">Delete</button>
         </td>
@@ -326,7 +323,7 @@ export async function init() {
         <td><strong>${escapeHtml(n.title)}</strong></td>
         <td>${escapeHtml(n.author || 'Editorial')}</td>
         <td><span class="badge badge-pending">${escapeHtml(n.category || 'General')}</span></td>
-        <td>${new Date(n.created_at).toLocaleDateString()}</td>
+        <td><span class="badge badge-active">${escapeHtml(n.media_type || 'image')}</span> ${n.media_url || n.image_url ? `<a href="${escapeHtml(n.media_url || n.image_url)}" target="_blank" style="color: var(--admin-gold); text-decoration: underline;">View</a>` : 'None'}</td>
         <td>
           <button class="btn-admin-outline" style="padding: 0.25rem 0.625rem; font-size: 0.75rem; color: #ef4444;" onclick="window.deleteItem('news', '${n.id}')">Delete</button>
         </td>
@@ -352,35 +349,9 @@ export async function init() {
         <td><strong>${escapeHtml(p.title)}</strong></td>
         <td><span class="badge badge-approved">${escapeHtml(p.status || 'Active')}</span></td>
         <td>${Array.isArray(p.options) ? p.options.length : 'Multiple'} Options</td>
-        <td>${new Date(p.created_at).toLocaleDateString()}</td>
+        <td><span class="badge badge-active">${escapeHtml(p.media_type || 'none')}</span> ${p.media_url ? `<a href="${escapeHtml(p.media_url)}" target="_blank" style="color: var(--admin-gold); text-decoration: underline;">View</a>` : 'None'}</td>
         <td>
           <button class="btn-admin-outline" style="padding: 0.25rem 0.625rem; font-size: 0.75rem; color: #ef4444;" onclick="window.deleteItem('polls', '${p.id}')">Delete</button>
-        </td>
-      </tr>
-    `).join('');
-  }
-
-  async function loadGallery() {
-    const tbody = document.getElementById('gallery-table-body');
-    if (!tbody) return;
-    tbody.innerHTML = '<tr><td colspan="5">Loading showcase media...</td></tr>';
-
-    const res = await api.get('/api/admin/gallery');
-    const items = extractArray(res);
-
-    if (items.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="5">No media uploaded yet</td></tr>';
-      return;
-    }
-
-    tbody.innerHTML = items.map(g => `
-      <tr>
-        <td><strong>${escapeHtml(g.title)}</strong></td>
-        <td><span class="badge badge-active">${escapeHtml(g.type || 'image')}</span></td>
-        <td><a href="${escapeHtml(g.media_url)}" target="_blank" style="color: var(--admin-gold); text-decoration: underline;">View Media</a></td>
-        <td>${escapeHtml(g.category || 'General')}</td>
-        <td>
-          <button class="btn-admin-outline" style="padding: 0.25rem 0.625rem; font-size: 0.75rem; color: #ef4444;" onclick="window.deleteItem('gallery', '${g.id}')">Delete</button>
         </td>
       </tr>
     `).join('');
