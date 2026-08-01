@@ -242,8 +242,8 @@ body.page-admin .site-header .nav-brand:hover {
 /* Rehauled Buttons */
 .login-btn,
 .btn-admin-gold {
-  background: linear-gradient(135deg, var(--admin-gold) 0%, var(--admin-gold-hover) 100%) !important;
-  color: #0A192F !important;
+  background: var(--admin-gold) !important;
+  color: var(--admin-header-bg) !important;
   border: none !important;
   border-radius: 6px !important;
   padding: 0.875rem 1.75rem !important;

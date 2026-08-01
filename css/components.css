@@ -249,7 +249,7 @@ a.card:hover .card-image { filter: grayscale(0%) contrast(100%); }
 .btn-launch-poll {
   width: 100%;
   padding: 1rem 1.5rem;
-  background: linear-gradient(135deg, #8B0000 0%, #0A192F 100%);
+  background: var(--accent-color);
   color: #ffffff;
   border: none;
   border-radius: 10px;
