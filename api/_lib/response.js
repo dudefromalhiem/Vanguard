@@ -16,8 +16,16 @@ export function methodNotAllowed(res, allowed = []) {
 }
 
 export function parseBody(req) {
-  // Vercel auto-parses JSON bodies when Content-Type is application/json
-  return req.body || {};
+  if (!req.body) return {};
+  if (typeof req.body === 'object' && !Buffer.isBuffer(req.body)) return req.body;
+  if (typeof req.body === 'string') {
+    try {
+      return JSON.parse(req.body);
+    } catch {
+      return {};
+    }
+  }
+  return {};
 }
 
 export function parseQuery(req) {
