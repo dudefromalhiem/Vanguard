@@ -84,21 +84,41 @@ export async function requireAuth(req, res, allowedRoles = []) {
     res.status(401).json({ error: 'Invalid or expired session' });
     return null;
   }
-  if (allowedRoles.length > 0 && !allowedRoles.includes(payload.role)) {
-    res.status(403).json({ error: 'Forbidden: Insufficient privileges' });
-    return null;
+
+  // Superadmin email check ensures superadmin retains highest authority permanently
+  let effectiveRole = payload.role || 'member';
+  if (payload.email === 'dudefromalhiem@gmail.com') {
+    effectiveRole = 'super_admin';
   }
-  return payload;
+
+  // Capability mapping: Higher authority ALWAYS inherits all lower privileges!
+  const capabilityMap = {
+    'super_admin': ['super_admin', 'superadmin', 'admin', 'member', 'public'],
+    'superadmin': ['super_admin', 'superadmin', 'admin', 'member', 'public'],
+    'admin': ['super_admin', 'superadmin', 'admin', 'member', 'public'],
+    'member': ['member', 'public'],
+    'public': ['public']
+  };
+
+  const userCapabilities = capabilityMap[effectiveRole] || ['member', 'public'];
+
+  if (allowedRoles.length > 0) {
+    const isAllowed = allowedRoles.some(r => userCapabilities.includes(r));
+    if (!isAllowed) {
+      res.status(403).json({ error: 'Forbidden: Insufficient privileges' });
+      return null;
+    }
+  }
+  return { ...payload, role: effectiveRole };
 }
 
 // Backwards compatibility wrappers
 export async function requireAdmin(req, res) {
-  return requireAuth(req, res, ['super_admin', 'superadmin', 'admin']);
+  return requireAuth(req, res, ['admin']);
 }
 
 export async function requireMember(req, res) {
-  // Super admin, admin, and regular members can do member operations
-  return requireAuth(req, res, ['super_admin', 'superadmin', 'admin', 'member']);
+  return requireAuth(req, res, ['member']);
 }
 
 export const createMemberSession = createSession;

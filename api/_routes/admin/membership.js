@@ -47,19 +47,24 @@ export default async function handler(req, res) {
 
     if (updateErr) return error(res, 'Failed to update application: ' + updateErr.message, 500);
 
-    // If approved, create/promote user in members table so they can log in and participate!
+    // If approved, create/promote user in members table (never demote existing admins or super admins!)
     if (status === 'approved' || status === 'accepted') {
       const hash = currentApp.password_hash || await hashPassword('VanguardMember123!');
-      const { error: insertErr } = await db.from('members').insert({
-        name: currentApp.name,
-        email: currentApp.email,
-        password_hash: hash,
-        role: 'member'
-      });
       
-      // If member record exists, upgrade role to 'member'
-      if (insertErr && insertErr.code === '23505') {
-        await db.from('members').update({ role: 'member' }).eq('email', currentApp.email);
+      const { data: existingUser } = await db.from('members').select('*').eq('email', currentApp.email).single();
+      
+      if (!existingUser) {
+        await db.from('members').insert({
+          name: currentApp.name,
+          email: currentApp.email,
+          password_hash: hash,
+          role: 'member'
+        });
+      } else {
+        // Upgrade role to 'member' ONLY IF user is currently 'public' (NEVER demote admin or super_admin!)
+        if (existingUser.role !== 'admin' && existingUser.role !== 'super_admin' && existingUser.role !== 'superadmin') {
+          await db.from('members').update({ role: 'member' }).eq('email', currentApp.email);
+        }
       }
     }
 
