@@ -5,6 +5,24 @@ document.addEventListener('DOMContentLoaded', () => {
   const errorDiv = document.getElementById('login-error');
   const submitBtn = document.getElementById('login-submit');
 
+  // Password toggle
+  const toggleBtn = document.getElementById('toggle-password');
+  const passwordInput = document.getElementById('password');
+  const iconShow = document.getElementById('eye-icon-show');
+  const iconHide = document.getElementById('eye-icon-hide');
+
+  if (toggleBtn && passwordInput) {
+    toggleBtn.addEventListener('click', () => {
+      const isPassword = passwordInput.getAttribute('type') === 'password';
+      passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+      
+      if (iconShow && iconHide) {
+        iconShow.style.display = isPassword ? 'none' : 'block';
+        iconHide.style.display = isPassword ? 'block' : 'none';
+      }
+    });
+  }
+
   if (!form) return;
 
   form.addEventListener('submit', async (e) => {

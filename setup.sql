@@ -42,6 +42,15 @@ CREATE TABLE IF NOT EXISTS public.poll_votes (
     UNIQUE(poll_id, member_id) -- CRITICAL: Prevents duplicate voting per user per poll
 );
 
--- Security: Set up RLS (Row Level Security) if not already enabled.
--- Since backend uses Service Role key for APIs, RLS on public schema can be skipped,
--- but enabling it adds extra security against direct client queries.
+-- 5. Enable Row Level Security (RLS) & Policies
+-- Note: Vanguard's backend uses the Service Role Key, which automatically bypasses RLS for serverless API operations.
+-- Enabling RLS secures your database against unauthorized direct client access via the public anon key.
+
+ALTER TABLE public.members ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.polls ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.poll_options ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.poll_votes ENABLE ROW LEVEL SECURITY;
+
+-- Allow public read access to active polls & options
+CREATE POLICY "Allow public read access to polls" ON public.polls FOR SELECT USING (true);
+CREATE POLICY "Allow public read access to poll options" ON public.poll_options FOR SELECT USING (true);
