@@ -49,9 +49,19 @@
         </div>
       </div>
 
-      <a href="./login.html" id="profile-btn" class="icon-btn" aria-label="Login / Profile" title="Login / Dashboard">
-        <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-      </a>
+      <div class="profile-wrapper">
+        <button id="profile-btn" class="icon-btn" aria-label="Account Profile" title="Account & Portal Access">
+          <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        </button>
+
+        <div class="profile-dropdown-menu" id="profile-dropdown-menu">
+          <a href="./login.html" class="profile-dropdown-item">Sign In / Login</a>
+          <a href="./membership.html" class="profile-dropdown-item">Apply for Membership</a>
+          <div class="profile-dropdown-divider"></div>
+          <a href="./dashboard.html" class="profile-dropdown-item">Member Dashboard</a>
+          <a href="./admin.html" class="profile-dropdown-item">Admin Console</a>
+        </div>
+      </div>
     </div>
   </div>
 </header>

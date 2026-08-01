@@ -26,20 +26,19 @@ export function initNavigation() {
     document.body.classList.remove('drawer-open');
   }
 
-  // Active link
+  // Active link matching supporting clean URLs
   const pathParts = window.location.pathname.split('/');
-  const filename = pathParts[pathParts.length - 1] || 'index.html';
-  
+  let rawFilename = pathParts[pathParts.length - 1] || 'index.html';
+  if (!rawFilename) rawFilename = 'index.html';
+  const currentKey = rawFilename.replace(/\.html$/, '');
+
   document.querySelectorAll('.nav-link, .mobile-nav-link').forEach(link => {
     let href = link.getAttribute('href');
     if (!href) return;
-    
-    // Normalize href for matching
     if (href.startsWith('./')) href = href.substring(2);
-    if (href === '') href = 'index.html';
+    const linkKey = href.replace(/\.html$/, '');
     
-    // If the filename starts with the href or vice versa, mark it active
-    if (filename === href || (href === 'index.html' && filename === '')) {
+    if (currentKey === linkKey || (linkKey === 'index' && currentKey === '')) {
       link.classList.add('active');
     }
   });
@@ -51,6 +50,8 @@ export function initNavigation() {
     moreBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       moreDropdown.classList.toggle('open');
+      if (notificationPanel) notificationPanel.classList.remove('open');
+      if (profileDropdown) profileDropdown.classList.remove('open');
     });
     document.addEventListener('click', () => moreDropdown.classList.remove('open'));
   }
@@ -70,10 +71,22 @@ export function initNavigation() {
     notificationTrigger.addEventListener('click', (e) => {
       e.stopPropagation();
       notificationPanel.classList.toggle('open');
-      if (moreDropdown && moreDropdown.classList.contains('open')) {
-        moreDropdown.classList.remove('open');
-      }
+      if (moreDropdown) moreDropdown.classList.remove('open');
+      if (profileDropdown) profileDropdown.classList.remove('open');
     });
     document.addEventListener('click', () => notificationPanel.classList.remove('open'));
+  }
+
+  // Profile dropdown
+  const profileBtn = document.getElementById('profile-btn');
+  const profileDropdown = document.getElementById('profile-dropdown-menu');
+  if (profileBtn && profileDropdown) {
+    profileBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      profileDropdown.classList.toggle('open');
+      if (moreDropdown) moreDropdown.classList.remove('open');
+      if (notificationPanel) notificationPanel.classList.remove('open');
+    });
+    document.addEventListener('click', () => profileDropdown.classList.remove('open'));
   }
 }
