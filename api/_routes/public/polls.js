@@ -23,14 +23,50 @@ export default async function handler(req, res) {
     return success(res, formattedPolls);
     
   } else if (req.method === 'POST') {
-    // Require authentication for voting
-    const session = await requireAuth(req, res);
-    if (!session) return; // requireAuth handles the 401 response
+    const body = await parseBody(req);
+    
+    // 1. Create New Community Poll (Public / Member)
+    if (body.title && body.options) {
+      let options = body.options;
+      if (typeof options === 'string') {
+        try { options = JSON.parse(options); } catch (e) {
+          options = options.split(',').map(s => s.trim()).filter(Boolean);
+        }
+      }
 
-    const { poll_id, option_id } = await parseBody(req);
+      if (!Array.isArray(options) || options.length === 0) {
+        return error(res, 'Options must be a non-empty list', 400);
+      }
+
+      const { data: poll, error: pollError } = await db.from('polls').insert([{ 
+        title: body.title,
+        status: 'Active',
+        image_url: body.media_url || body.image_url || null,
+        media_type: body.media_type || 'none',
+        media_url: body.media_url || null,
+        created_by: null
+      }]).select().single();
+
+      if (pollError) return error(res, pollError.message, 500);
+
+      const optionRows = options.map(opt => ({
+        poll_id: poll.id,
+        option_text: typeof opt === 'string' ? opt : opt.text
+      }));
+
+      const { error: optError } = await db.from('poll_options').insert(optionRows);
+      if (optError) return error(res, optError.message, 500);
+
+      return success(res, poll, 201);
+    }
+
+    // 2. Vote in Existing Poll
+    const session = await requireAuth(req, res);
+    if (!session) return; // requireAuth handles 401
+
+    const { poll_id, option_id } = body;
     if (!poll_id || !option_id) return error(res, 'Missing required fields', 400);
 
-    // Use session ID directly to prevent spoofing
     const voter_id = session.id;
 
     const { error: err } = await db.from('poll_votes').insert([{ 

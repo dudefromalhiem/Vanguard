@@ -139,4 +139,54 @@ export async function init() {
     setTimeout(() => {
         loadPolls();
     }, 100);
+
+    // Modal Open/Close for Public Community Poll Creation
+    const openBtn = document.getElementById('btn-open-public-poll-modal');
+    const closeBtn = document.getElementById('btn-close-public-poll-modal');
+    const pollModal = document.getElementById('modal-public-poll');
+    const pollForm = document.getElementById('form-public-create-poll');
+
+    if (openBtn && pollModal) {
+        openBtn.addEventListener('click', () => pollModal.classList.add('open'));
+    }
+    if (closeBtn && pollModal) {
+        closeBtn.addEventListener('click', () => pollModal.classList.remove('open'));
+    }
+
+    if (pollForm) {
+        pollForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const question = document.getElementById('public-poll-question').value;
+            const options = document.getElementById('public-poll-options').value;
+            const mediaType = document.getElementById('public-poll-media-type').value;
+            const mediaUrl = document.getElementById('public-poll-media-url').value;
+
+            const submitBtn = pollForm.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Launching Poll...';
+
+            try {
+                const res = await api.post('/api/public/polls', {
+                    title: question,
+                    options: options,
+                    media_type: mediaType,
+                    media_url: mediaUrl
+                });
+
+                if (res.ok) {
+                    showToast('Community Poll launched successfully!', 'success');
+                    if (pollModal) pollModal.classList.remove('open');
+                    pollForm.reset();
+                    loadPolls();
+                } else {
+                    throw new Error(res.error || 'Failed to launch poll');
+                }
+            } catch (err) {
+                showToast(err.message, 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Launch Poll';
+            }
+        });
+    }
 }

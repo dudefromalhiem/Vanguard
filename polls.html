@@ -12,15 +12,52 @@
   <main id="main-content">
     <section id="active-polls" class="section">
       <div class="container">
-        <div class="section-header">
-          <h2>Active Polls</h2>
-          <p>Participate in ongoing discussions and decisions.</p>
+        <div class="section-header" style="display: flex; align-items: center; justify-content: space-between;">
+          <div>
+            <h2>Active Polls</h2>
+            <p>Participate in ongoing discussions and decisions.</p>
+          </div>
+          <button class="btn btn-primary" id="btn-open-public-poll-modal">+ Create Community Poll</button>
         </div>
         <div id="polls-container" class="cards-grid">
           <div id="active-polls-list"></div>
         </div>
       </div>
     </section>
+
+    <!-- Create Poll Modal for Public/Members -->
+    <div class="admin-modal-overlay" id="modal-public-poll">
+      <div class="admin-modal-box" style="background: var(--bg-color); color: var(--text-primary); border-top: 4px solid var(--accent-color);">
+        <div class="admin-modal-header" style="border-bottom: 1px solid var(--border-color);">
+          <h4>Create Community Poll</h4>
+          <button class="modal-close-btn" id="btn-close-public-poll-modal">&times;</button>
+        </div>
+        <form id="form-public-create-poll">
+          <div class="form-group">
+            <label for="public-poll-question">Poll Question</label>
+            <input type="text" id="public-poll-question" required placeholder="What event should Vanguard organize next?">
+          </div>
+          <div class="form-group">
+            <label for="public-poll-options">Poll Options (Comma separated)</label>
+            <input type="text" id="public-poll-options" required placeholder="Hackathon, Debate Tournament, AI Workshop">
+          </div>
+          <div class="form-group">
+            <label for="public-poll-media-type">Optional Attachment (Picture / Video / Audio)</label>
+            <select id="public-poll-media-type">
+              <option value="none">None (Text Only)</option>
+              <option value="image">Picture / Cover Image</option>
+              <option value="video">Video Link (YouTube / MP4)</option>
+              <option value="audio">Audio / Podcast Link (Spotify / MP3)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="public-poll-media-url">Media Attachment URL</label>
+            <input type="url" id="public-poll-media-url" placeholder="https://images.unsplash.com/... or YouTube link">
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 1rem;">Launch Poll</button>
+        </form>
+      </div>
+    </div>
     
     <section id="past-polls" class="section">
       <div class="container">

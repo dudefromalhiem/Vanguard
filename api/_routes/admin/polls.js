@@ -39,16 +39,20 @@ export default async function handler(req, res) {
       return error(res, 'options must be a non-empty array', 400);
     }
     
+    const isValidUuid = typeof payload?.id === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(payload.id);
+    
     // Insert Poll
     const { data: poll, error: pollError } = await db.from('polls').insert([{ 
       title: body.title,
       description: body.description || null,
-      status: body.status || 'Draft',
+      status: body.status || 'Active',
       start_date: body.start_date || null,
       end_date: body.end_date || null,
-      image_url: body.image_url || null,
+      image_url: body.media_url || body.image_url || null,
+      media_type: body.media_type || 'none',
+      media_url: body.media_url || null,
       tags: body.tags || [],
-      created_by: payload.id
+      created_by: isValidUuid ? payload.id : null
     }]).select().single();
     
     if (pollError) return error(res, pollError.message, 500);
