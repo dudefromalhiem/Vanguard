@@ -17,24 +17,34 @@ export default async function handler(req, res) {
   const { email, password } = body;
 
   // 1. Check ADMIN_CREDENTIALS environment variable
+  const rawAdminCreds = (process.env.ADMIN_CREDENTIALS || '').trim();
   let envAdmins = {};
-  if (process.env.ADMIN_CREDENTIALS) {
+
+  if (rawAdminCreds) {
     try {
-      envAdmins = JSON.parse(process.env.ADMIN_CREDENTIALS);
+      envAdmins = JSON.parse(rawAdminCreds);
     } catch {
-      // If it's a simple string format like "email:password"
-      const parts = process.env.ADMIN_CREDENTIALS.split(':');
-      if (parts.length === 2) {
-        envAdmins[parts[0].trim()] = parts[1].trim();
+      const parts = rawAdminCreds.split(':');
+      if (parts.length >= 2) {
+        const cleanKey = parts[0].replace(/['"{} ]/g, '').trim();
+        const cleanVal = parts.slice(1).join(':').replace(/['"{} ]/g, '').trim();
+        envAdmins[cleanKey] = cleanVal;
       }
     }
   }
 
-  if (envAdmins[email] && envAdmins[email] === password) {
-    const payload = { id: 'admin-env', email: email, role: 'admin' };
-    const token = await createAdminSession(payload);
-    setAdminCookie(res, token);
-    return success(res, { message: 'Admin logged in successfully', user: payload });
+  const inputEmail = (email || '').trim().toLowerCase();
+  const inputPassword = (password || '').trim();
+
+  for (const [k, v] of Object.entries(envAdmins)) {
+    const keyClean = k.replace(/['"{} ]/g, '').trim().toLowerCase();
+    const valClean = String(v).replace(/['"{} ]/g, '').trim();
+    if (keyClean === inputEmail && valClean === inputPassword) {
+      const payload = { id: 'admin-env', email: email, role: 'admin' };
+      const token = await createAdminSession(payload);
+      setAdminCookie(res, token);
+      return success(res, { message: 'Admin logged in successfully', user: payload });
+    }
   }
 
   // 2. Check Supabase members table for admin role
