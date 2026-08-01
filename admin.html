@@ -1,98 +1,366 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vanguard - Admin Dashboard</title>
+    <title>Vanguard | Executive Admin Console</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
     <link rel="stylesheet" href="./css/main.css">
+    <link rel="stylesheet" href="./css/admin.css">
 </head>
-<body>
+<body class="page-admin">
     <div data-component="header"></div>
 
-    <main id="main-content">
+    <main class="admin-wrapper">
+        <!-- Admin Login Section -->
         <section class="section" id="admin-login-section">
-            <div class="container">
-                <h2>Admin Login</h2>
+            <div class="login-container" style="border-top: 4px solid var(--admin-gold);">
+                <div class="login-header">
+                    <h1 style="color: var(--admin-gold);">Admin Gateway</h1>
+                    <p>Enter administrative credentials to access the Executive Console</p>
+                </div>
+                
                 <form id="admin-login-form">
                     <div class="form-group">
-                        <label class="form-label" for="admin-email">Email</label>
-                        <input class="form-input" type="email" id="admin-email" required>
+                        <label for="admin-email">Admin Email</label>
+                        <input type="email" id="admin-email" name="email" required placeholder="dudefromalhiem@gmail.com">
                     </div>
                     <div class="form-group">
-                        <label class="form-label" for="admin-password">Password</label>
-                        <input class="form-input" type="password" id="admin-password" required>
+                        <label for="admin-password">Password</label>
+                        <input type="password" id="admin-password" name="password" required placeholder="••••••••">
                     </div>
-                    <button class="btn-primary" type="submit">Log In</button>
-                    <div id="admin-login-error" class="error-message"></div>
+                    <button type="submit" class="login-btn" style="background: var(--admin-gold); color: #0E1726;">Authenticate Console</button>
+                    <div id="admin-login-error" class="form-error" style="color: #ef4444; margin-top: 1rem; display: none;"></div>
                 </form>
             </div>
         </section>
 
-        <section class="section" id="admin-dashboard-section" style="display: none;">
-            <div class="container-wide">
-                <h2>Admin Dashboard</h2>
-                <button class="btn-primary" id="admin-logout-btn">Log Out</button>
+        <!-- Admin Dashboard Section -->
+        <section id="admin-dashboard-section" style="display: none;">
+            <!-- Header Bar -->
+            <div class="admin-header-bar">
+                <div class="admin-title-group">
+                    <h1>Executive Command Console</h1>
+                    <p>Vanguard Society Administration & Member Management</p>
+                </div>
+                <button class="btn-admin-outline" id="admin-logout-btn">Log Out</button>
+            </div>
 
-                <div class="tabs" id="admin-tabs">
-                    <button class="tab-item active" data-target="tab-members">Members</button>
-                    <button class="tab-item" data-target="tab-events">Events</button>
-                    <button class="tab-item" data-target="tab-applications">Applications</button>
+            <!-- Stats Grid -->
+            <div class="admin-stats-grid">
+                <div class="admin-stat-card">
+                    <div class="stat-label">Pending Applications</div>
+                    <div class="stat-value" id="stat-pending-count">0</div>
+                </div>
+                <div class="admin-stat-card">
+                    <div class="stat-label">Active Members</div>
+                    <div class="stat-value" id="stat-members-count">0</div>
+                </div>
+                <div class="admin-stat-card">
+                    <div class="stat-label">Total Events</div>
+                    <div class="stat-value" id="stat-events-count">0</div>
+                </div>
+                <div class="admin-stat-card">
+                    <div class="stat-label">Published Articles</div>
+                    <div class="stat-value" id="stat-news-count">0</div>
+                </div>
+            </div>
+
+            <!-- Navigation Tabs -->
+            <div class="admin-tabs-nav" id="admin-tabs">
+                <button class="admin-tab-btn active" data-target="tab-applications">Membership Applications</button>
+                <button class="admin-tab-btn" data-target="tab-members">Active Members</button>
+                <button class="admin-tab-btn" data-target="tab-events">Events & Activities</button>
+                <button class="admin-tab-btn" data-target="tab-news">News & Articles</button>
+                <button class="admin-tab-btn" data-target="tab-polls">Community Polls</button>
+                <button class="admin-tab-btn" data-target="tab-gallery">Media Gallery (Images/Videos)</button>
+            </div>
+
+            <!-- Tab Panes -->
+            <div class="admin-panes-container">
+                <!-- 1. Applications Tab -->
+                <div class="admin-pane active" id="tab-applications">
+                    <div class="pane-header">
+                        <h3>Pending Member Applications</h3>
+                        <button class="btn-admin-outline" onclick="window.refreshApplications()">Refresh List</button>
+                    </div>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Applicant Name</th>
+                                    <th>Email</th>
+                                    <th>USN / Branch</th>
+                                    <th>Preferred Wing</th>
+                                    <th>Date Submitted</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="applications-table-body">
+                                <tr><td colspan="6">Loading applications...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
-                <div class="tab-content">
-                    <div class="tab-pane active" id="tab-members">
-                        <div class="table-responsive">
-                            <table class="table" id="members-table">
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Status</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="members-table-body"></tbody>
-                            </table>
-                        </div>
+                <!-- 2. Members Tab -->
+                <div class="admin-pane" id="tab-members">
+                    <div class="pane-header">
+                        <h3>Active Society Members</h3>
+                        <button class="btn-admin-outline" onclick="window.refreshMembers()">Refresh Directory</button>
                     </div>
-                    <div class="tab-pane" id="tab-events">
-                        <button class="btn-primary" id="btn-create-event">Create Event</button>
-                        <div class="table-responsive">
-                            <table class="table" id="events-table">
-                                <thead>
-                                    <tr>
-                                        <th>Title</th>
-                                        <th>Date</th>
-                                        <th>Location</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="events-table-body"></tbody>
-                            </table>
-                        </div>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Member Name</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Joined Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="members-table-body">
+                                <tr><td colspan="5">Loading members...</td></tr>
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="tab-pane" id="tab-applications">
-                        <div class="table-responsive">
-                            <table class="table" id="applications-table">
-                                <thead>
-                                    <tr>
-                                        <th>Applicant</th>
-                                        <th>Email</th>
-                                        <th>Date</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="applications-table-body"></tbody>
-                            </table>
-                        </div>
+                </div>
+
+                <!-- 3. Events Tab -->
+                <div class="admin-pane" id="tab-events">
+                    <div class="pane-header">
+                        <h3>Scheduled Events</h3>
+                        <button class="btn-admin-gold" id="btn-open-event-modal">+ Create Event</button>
+                    </div>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Event Title</th>
+                                    <th>Date</th>
+                                    <th>Location</th>
+                                    <th>Category</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="events-table-body">
+                                <tr><td colspan="5">Loading events...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 4. News Tab -->
+                <div class="admin-pane" id="tab-news">
+                    <div class="pane-header">
+                        <h3>News & Editorial Articles</h3>
+                        <button class="btn-admin-gold" id="btn-open-news-modal">+ Publish Article</button>
+                    </div>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Article Title</th>
+                                    <th>Author</th>
+                                    <th>Category</th>
+                                    <th>Published Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="news-table-body">
+                                <tr><td colspan="5">Loading articles...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 5. Polls Tab -->
+                <div class="admin-pane" id="tab-polls">
+                    <div class="pane-header">
+                        <h3>Community Polls</h3>
+                        <button class="btn-admin-gold" id="btn-open-poll-modal">+ Create Poll</button>
+                    </div>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Poll Question</th>
+                                    <th>Status</th>
+                                    <th>Options</th>
+                                    <th>Created At</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="polls-table-body">
+                                <tr><td colspan="5">Loading polls...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 6. Media Gallery Tab -->
+                <div class="admin-pane" id="tab-gallery">
+                    <div class="pane-header">
+                        <h3>Showcase Media (Photos & Videos)</h3>
+                        <button class="btn-admin-gold" id="btn-open-media-modal">+ Upload Media</button>
+                    </div>
+                    <div class="admin-table-container">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Type</th>
+                                    <th>URL / Media Link</th>
+                                    <th>Category</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="gallery-table-body">
+                                <tr><td colspan="5">Loading media showcase...</td></tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </section>
     </main>
 
+    <!-- Modals -->
+
+    <!-- Modal 1: Create Event -->
+    <div class="admin-modal-overlay" id="modal-event">
+        <div class="admin-modal-box">
+            <div class="admin-modal-header">
+                <h4>Schedule New Event</h4>
+                <button class="modal-close-btn" onclick="window.closeModals()">&times;</button>
+            </div>
+            <form id="form-create-event">
+                <div class="admin-form-group">
+                    <label for="event-title">Event Title</label>
+                    <input type="text" id="event-title" required placeholder="Annual Vanguard Hackathon">
+                </div>
+                <div class="admin-form-group">
+                    <label for="event-date">Date & Time</label>
+                    <input type="datetime-local" id="event-date" required>
+                </div>
+                <div class="admin-form-group">
+                    <label for="event-location">Location / Venue</label>
+                    <input type="text" id="event-location" required placeholder="Main Auditorium or Google Meet">
+                </div>
+                <div class="admin-form-group">
+                    <label for="event-description">Description</label>
+                    <textarea id="event-description" rows="3" required placeholder="Event details..."></textarea>
+                </div>
+                <div class="admin-form-group">
+                    <label for="event-image">Cover Image URL</label>
+                    <input type="url" id="event-image" placeholder="https://images.unsplash.com/...">
+                </div>
+                <button type="submit" class="btn-admin-gold" style="width: 100%; justify-content: center; margin-top: 1rem;">Publish Event</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal 2: Publish News -->
+    <div class="admin-modal-overlay" id="modal-news">
+        <div class="admin-modal-box">
+            <div class="admin-modal-header">
+                <h4>Publish News Article</h4>
+                <button class="modal-close-btn" onclick="window.closeModals()">&times;</button>
+            </div>
+            <form id="form-publish-news">
+                <div class="admin-form-group">
+                    <label for="news-title">Article Title</label>
+                    <input type="text" id="news-title" required placeholder="Vanguard Team Wins National Championship">
+                </div>
+                <div class="admin-form-group">
+                    <label for="news-author">Author Name</label>
+                    <input type="text" id="news-author" required placeholder="Editorial Desk">
+                </div>
+                <div class="admin-form-group">
+                    <label for="news-category">Category</label>
+                    <select id="news-category">
+                        <option value="General">General News</option>
+                        <option value="Achievements">Achievements</option>
+                        <option value="Technical">Technical</option>
+                        <option value="Events">Events Update</option>
+                    </select>
+                </div>
+                <div class="admin-form-group">
+                    <label for="news-body">Content Body</label>
+                    <textarea id="news-body" rows="4" required placeholder="Article body text..."></textarea>
+                </div>
+                <div class="admin-form-group">
+                    <label for="news-image">Header Image URL</label>
+                    <input type="url" id="news-image" placeholder="https://images.unsplash.com/...">
+                </div>
+                <button type="submit" class="btn-admin-gold" style="width: 100%; justify-content: center; margin-top: 1rem;">Publish Article</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal 3: Create Poll -->
+    <div class="admin-modal-overlay" id="modal-poll">
+        <div class="admin-modal-box">
+            <div class="admin-modal-header">
+                <h4>Create Community Poll</h4>
+                <button class="modal-close-btn" onclick="window.closeModals()">&times;</button>
+            </div>
+            <form id="form-create-poll">
+                <div class="admin-form-group">
+                    <label for="poll-question">Poll Question</label>
+                    <input type="text" id="poll-question" required placeholder="Which workshop topic would you prefer next?">
+                </div>
+                <div class="admin-form-group">
+                    <label for="poll-options">Poll Options (Comma separated)</label>
+                    <input type="text" id="poll-options" required placeholder="AI & Machine Learning, Web3 Development, Cybersecurity">
+                </div>
+                <button type="submit" class="btn-admin-gold" style="width: 100%; justify-content: center; margin-top: 1rem;">Launch Poll</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal 4: Add Media Item (Images/Videos) -->
+    <div class="admin-modal-overlay" id="modal-media">
+        <div class="admin-modal-box">
+            <div class="admin-modal-header">
+                <h4>Add Showcase Media</h4>
+                <button class="modal-close-btn" onclick="window.closeModals()">&times;</button>
+            </div>
+            <form id="form-add-media">
+                <div class="admin-form-group">
+                    <label for="media-title">Media Title</label>
+                    <input type="text" id="media-title" required placeholder="Annual General Body Meeting Highlight">
+                </div>
+                <div class="admin-form-group">
+                    <label for="media-type">Media Type</label>
+                    <select id="media-type">
+                        <option value="image">Photo / Image</option>
+                        <option value="video">Video Showcase</option>
+                    </select>
+                </div>
+                <div class="admin-form-group">
+                    <label for="media-url">Direct Media / Video Embed URL</label>
+                    <input type="url" id="media-url" required placeholder="https://images.unsplash.com/... or https://youtube.com/...">
+                </div>
+                <div class="admin-form-group">
+                    <label for="media-description">Caption / Description</label>
+                    <input type="text" id="media-description" placeholder="Brief description...">
+                </div>
+                <button type="submit" class="btn-admin-gold" style="width: 100%; justify-content: center; margin-top: 1rem;">Add to Showcase</button>
+            </form>
+        </div>
+    </div>
+
     <div data-component="footer"></div>
+
+    <!-- Scripts -->
     <script type="module" src="./js/app.js"></script>
-    <script type="module" src="./js/pages/admin.js"></script>
 </body>
 </html>

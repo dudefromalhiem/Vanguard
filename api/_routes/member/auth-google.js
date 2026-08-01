@@ -1,5 +1,7 @@
 export default async function handler(req, res) {
-  const supabaseUrl = (process.env.SUPABASE_URL || '').replace(/\/$/, '');
+  let supabaseUrl = (process.env.SUPABASE_URL || '').trim();
+  // Strip trailing slashes and PostgREST paths (/rest/v1...)
+  supabaseUrl = supabaseUrl.replace(/\/rest\/v\d+.*$/i, '').replace(/\/$/, '');
   
   if (!supabaseUrl) {
     res.setHeader('Content-Type', 'application/json');

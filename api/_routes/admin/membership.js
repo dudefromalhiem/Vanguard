@@ -14,8 +14,11 @@ export default async function handler(req, res) {
     const query = parseQuery(req);
     const { limit, offset } = paginate(query);
     
-    let supabaseQuery = db.from('membership_applications').select('*', { count: 'exact' });
-    if (query.status) supabaseQuery = supabaseQuery.eq('status', query.status);
+    const tableName = query.type === 'members' ? 'members' : 'membership_applications';
+    let supabaseQuery = db.from(tableName).select('*', { count: 'exact' });
+    if (query.status && tableName === 'membership_applications') {
+      supabaseQuery = supabaseQuery.eq('status', query.status);
+    }
     
     const { data, count, error: err } = await supabaseQuery
       .order('created_at', { ascending: false })
