@@ -178,6 +178,22 @@ export async function init() {
     const pollModal = document.getElementById('modal-public-poll');
     const pollForm = document.getElementById('form-public-create-poll');
 
+    // Custom File Dropzone interaction
+    const dropzoneTrigger = document.getElementById('dropzone-trigger');
+    const fileInput = document.getElementById('public-poll-file');
+    const dropzoneLabel = document.getElementById('dropzone-label');
+
+    if (dropzoneTrigger && fileInput) {
+        dropzoneTrigger.addEventListener('click', () => fileInput.click());
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files && fileInput.files[0]) {
+                if (dropzoneLabel) {
+                    dropzoneLabel.innerHTML = `📷 Selected: <strong>${fileInput.files[0].name}</strong>`;
+                }
+            }
+        });
+    }
+
     if (openBtn && pollModal) {
         openBtn.addEventListener('click', () => pollModal.classList.add('open'));
     }
