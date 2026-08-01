@@ -12,7 +12,8 @@ export async function init() {
     async function loadEvents(filters = {}) {
         try {
             const qs = buildQueryString(filters);
-            const events = await api.get(`/api/events${qs ? '?' + qs : ''}`);
+            const res = await api.get(`/api/public/events${qs ? '?' + qs : ''}`);
+            const events = res && res.ok && Array.isArray(res.data) ? res.data : (Array.isArray(res) ? res : []);
             renderEvents(events);
             if (calendarContainer) {
                 createCalendar(calendarContainer, events, {
@@ -27,11 +28,15 @@ export async function init() {
 
     function renderEvents(events) {
         if (!eventsList) return;
+        if (!Array.isArray(events) || events.length === 0) {
+            eventsList.innerHTML = '<p style="color:var(--text-secondary);">No upcoming events scheduled at the moment.</p>';
+            return;
+        }
         eventsList.innerHTML = events.map(e => `
-            <div class="event-card" onclick="window.showEventDetail('${e.id}')">
-                <h3>${e.title}</h3>
-                <p>${formatDate(e.date)}</p>
-                <p>${e.wing || ''} ${e.type || ''}</p>
+            <div class="card hoverable" style="padding:1.5rem; margin-bottom:1rem; cursor:pointer;" onclick="window.showEventDetail('${e.id}')">
+                <h3 style="font-family:'Lora',serif; margin-bottom:0.5rem;">${e.title}</h3>
+                <p style="color:var(--text-secondary); font-size:0.875rem;">📅 ${formatDate(e.event_date || e.date)} ${e.location ? '&bull; 📍 ' + e.location : ''}</p>
+                <p style="color:var(--text-tertiary); font-size:0.875rem; margin-top:0.5rem;">${e.description || ''}</p>
             </div>
         `).join('');
     }
