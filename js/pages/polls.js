@@ -158,19 +158,32 @@ export async function init() {
             e.preventDefault();
             const question = document.getElementById('public-poll-question').value;
             const options = document.getElementById('public-poll-options').value;
-            const mediaType = document.getElementById('public-poll-media-type').value;
-            const mediaUrl = document.getElementById('public-poll-media-url').value;
+            const durationHours = document.getElementById('public-poll-duration')?.value || '24';
+            const mediaUrlInput = document.getElementById('public-poll-media-url')?.value || '';
+            const fileInput = document.getElementById('public-poll-file');
 
             const submitBtn = pollForm.querySelector('button[type="submit"]');
             submitBtn.disabled = true;
             submitBtn.textContent = 'Launching Poll...';
 
+            let finalImageUrl = mediaUrlInput;
+
+            if (fileInput && fileInput.files && fileInput.files[0]) {
+                const file = fileInput.files[0];
+                finalImageUrl = await new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = (evt) => resolve(evt.target.result);
+                    reader.onerror = () => resolve(mediaUrlInput);
+                    reader.readAsDataURL(file);
+                });
+            }
+
             try {
                 const res = await api.post('/api/public/polls', {
                     title: question,
                     options: options,
-                    media_type: mediaType,
-                    media_url: mediaUrl
+                    duration_hours: durationHours,
+                    image_url: finalImageUrl
                 });
 
                 if (res.ok) {

@@ -180,14 +180,27 @@ export async function init() {
       e.preventDefault();
       const rawOptions = document.getElementById('poll-options').value;
       const optionsArr = rawOptions.split(',').map(s => s.trim()).filter(Boolean);
-      const mediaType = document.getElementById('poll-media-type').value;
-      const mediaUrl = document.getElementById('poll-media-url').value;
+      const durationHours = document.getElementById('poll-duration')?.value || '24';
+      const mediaUrlInput = document.getElementById('poll-media-url')?.value || '';
+      const fileInput = document.getElementById('poll-file');
+
+      let finalImageUrl = mediaUrlInput;
+
+      if (fileInput && fileInput.files && fileInput.files[0]) {
+        const file = fileInput.files[0];
+        finalImageUrl = await new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = (evt) => resolve(evt.target.result);
+          reader.onerror = () => resolve(mediaUrlInput);
+          reader.readAsDataURL(file);
+        });
+      }
 
       const body = {
         title: document.getElementById('poll-question').value,
         options: optionsArr,
-        media_type: mediaType,
-        media_url: mediaUrl
+        duration_hours: durationHours,
+        image_url: finalImageUrl
       };
 
       const res = await api.post('/api/admin/polls', body);
@@ -347,10 +360,11 @@ export async function init() {
     tbody.innerHTML = items.map(p => `
       <tr>
         <td><strong>${escapeHtml(p.title)}</strong></td>
-        <td><span class="badge badge-approved">${escapeHtml(p.status || 'Active')}</span></td>
+        <td><span class="badge ${p.status === 'Active' ? 'badge-approved' : 'badge-rejected'}">${escapeHtml(p.status || 'Active')}</span></td>
         <td>${Array.isArray(p.options) ? p.options.length : 'Multiple'} Options</td>
-        <td><span class="badge badge-active">${escapeHtml(p.media_type || 'none')}</span> ${p.media_url ? `<a href="${escapeHtml(p.media_url)}" target="_blank" style="color: var(--admin-gold); text-decoration: underline;">View</a>` : 'None'}</td>
+        <td>${p.image_url ? `<a href="${escapeHtml(p.image_url)}" target="_blank" style="color: var(--admin-gold); text-decoration: underline;">Attached Image</a>` : '<span style="color:var(--admin-text-muted);">None (or Auto-Cleared)</span>'}</td>
         <td>
+          <button class="btn-admin-gold" style="padding: 0.25rem 0.625rem; font-size: 0.75rem; margin-right: 0.375rem;" onclick="window.postponePoll('${p.id}')">+ Extend 24h</button>
           <button class="btn-admin-outline" style="padding: 0.25rem 0.625rem; font-size: 0.75rem; color: #ef4444;" onclick="window.deleteItem('polls', '${p.id}')">Delete</button>
         </td>
       </tr>
@@ -358,6 +372,17 @@ export async function init() {
   }
 
   // Global Actions
+  window.postponePoll = async (id) => {
+    if (confirm('Extend this poll by 24 hours and keep it active?')) {
+      const res = await api.post('/api/admin/polls', { action: 'postpone', id, extension_hours: 24 });
+      if (res.ok) {
+        alert('Poll extended by 24 hours!');
+        loadPolls();
+      } else {
+        alert('Failed to extend poll: ' + (res.error || 'Unknown error'));
+      }
+    }
+  };
   window.approveApp = async (id) => {
     if (confirm('Approve this membership application?')) {
       const res = await api.post('/api/admin/membership', { action: 'approve', id });

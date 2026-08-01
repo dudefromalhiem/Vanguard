@@ -42,16 +42,21 @@
             <input type="text" id="public-poll-options" required placeholder="Hackathon, Debate Tournament, AI Workshop">
           </div>
           <div class="form-group">
-            <label for="public-poll-media-type">Optional Attachment (Picture / Video / Audio)</label>
-            <select id="public-poll-media-type">
-              <option value="none">None (Text Only)</option>
-              <option value="image">Picture / Cover Image</option>
-              <option value="video">Video Link (YouTube / MP4)</option>
-              <option value="audio">Audio / Podcast Link (Spotify / MP3)</option>
+            <label for="public-poll-duration">How long should this poll stay active?</label>
+            <select id="public-poll-duration">
+              <option value="24">24 Hours (1 Day)</option>
+              <option value="48">48 Hours (2 Days)</option>
+              <option value="72">3 Days</option>
+              <option value="168">7 Days (1 Week)</option>
+              <option value="720">30 Days</option>
             </select>
           </div>
           <div class="form-group">
-            <label for="public-poll-media-url">Media Attachment URL</label>
+            <label for="public-poll-file">Upload Image from Device (Optional)</label>
+            <input type="file" id="public-poll-file" accept="image/*">
+          </div>
+          <div class="form-group">
+            <label for="public-poll-media-url">Or Media URL (Optional)</label>
             <input type="url" id="public-poll-media-url" placeholder="https://images.unsplash.com/... or YouTube link">
           </div>
           <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; margin-top: 1rem;">Launch Poll</button>

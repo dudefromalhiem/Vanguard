@@ -313,16 +313,21 @@
                     <input type="text" id="poll-options" required placeholder="AI & Machine Learning, Web3 Development, Cybersecurity">
                 </div>
                 <div class="admin-form-group">
-                    <label for="poll-media-type">Optional Attachment Type (Picture / Video / Audio)</label>
-                    <select id="poll-media-type">
-                        <option value="none">None (Text Only)</option>
-                        <option value="image">Picture / Diagram</option>
-                        <option value="video">Video Clip</option>
-                        <option value="audio">Audio Clip</option>
+                    <label for="poll-duration">Active Duration</label>
+                    <select id="poll-duration">
+                        <option value="24">24 Hours (1 Day)</option>
+                        <option value="48">48 Hours (2 Days)</option>
+                        <option value="72">3 Days</option>
+                        <option value="168">7 Days (1 Week)</option>
+                        <option value="720">30 Days</option>
                     </select>
                 </div>
                 <div class="admin-form-group">
-                    <label for="poll-media-url">Media Attachment URL</label>
+                    <label for="poll-file">Upload Image from Device (Optional)</label>
+                    <input type="file" id="poll-file" accept="image/*">
+                </div>
+                <div class="admin-form-group">
+                    <label for="poll-media-url">Or Media URL (Optional)</label>
                     <input type="url" id="poll-media-url" placeholder="https://images.unsplash.com/... or https://youtube.com/...">
                 </div>
                 <button type="submit" class="btn-admin-gold" style="width: 100%; justify-content: center; margin-top: 1rem;">Launch Poll</button>

@@ -6,9 +6,22 @@ export default async function handler(req, res) {
   const db = getDb();
 
   if (req.method === 'GET') {
+    // Auto-close expired polls & auto-delete media 24 hours post-expiration
+    const now = new Date();
+    const cutoff24h = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();
+
+    await db.from('polls')
+      .update({ status: 'Closed' })
+      .eq('status', 'Active')
+      .lt('end_date', now.toISOString());
+
+    await db.from('polls')
+      .update({ image_url: null })
+      .not('image_url', 'is', null)
+      .lt('end_date', cutoff24h);
+
     const { data: polls, error: err } = await db.from('polls')
       .select('*, poll_options(*, poll_votes(count))')
-      .order('is_active', { ascending: false })
       .order('created_at', { ascending: false });
     
     if (err) return error(res, err.message, 500);
@@ -38,12 +51,17 @@ export default async function handler(req, res) {
         return error(res, 'Options must be a non-empty list', 400);
       }
 
+      const durationHours = parseInt(body.duration_hours || 24, 10);
+      const startDate = new Date();
+      const endDate = new Date(startDate.getTime() + durationHours * 3600000);
+
+      // Only insert schema-valid columns
       const { data: poll, error: pollError } = await db.from('polls').insert([{ 
         title: body.title,
         status: 'Active',
-        image_url: body.media_url || body.image_url || null,
-        media_type: body.media_type || 'none',
-        media_url: body.media_url || null,
+        start_date: startDate.toISOString(),
+        end_date: endDate.toISOString(),
+        image_url: body.image_url || body.media_url || null,
         created_by: null
       }]).select().single();
 
