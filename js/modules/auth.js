@@ -22,7 +22,8 @@ export async function checkSession() {
 }
 
 export function getUser() { return currentUser; }
-export function isAdmin() { return currentUser?.role === 'admin'; }
+export function isSuperAdmin() { return currentUser?.role === 'super_admin' || currentUser?.role === 'superadmin' || currentUser?.email === 'dudefromalhiem@gmail.com'; }
+export function isAdmin() { return isSuperAdmin() || currentUser?.role === 'admin'; }
 export function isMember() { return !!currentUser; }
 
 export async function logout() {
@@ -34,7 +35,8 @@ export async function logout() {
 
 export async function requireAuth(allowedRoles = [], redirectUrl = '/login.html') {
   const session = await checkSession();
-  if (!session || (allowedRoles.length > 0 && !allowedRoles.includes(session.role))) {
+  const effectiveRoles = allowedRoles.flatMap(r => r === 'admin' ? ['admin', 'super_admin', 'superadmin'] : r);
+  if (!session || (allowedRoles.length > 0 && !effectiveRoles.includes(session.role))) {
     window.location.href = redirectUrl;
     return null;
   }
@@ -48,8 +50,9 @@ export async function initAuthUI() {
   const mobileDrawer = document.getElementById('mobile-drawer');
 
   if (session) {
-    const linkUrl = session.role === 'admin' ? '/admin.html' : '/dashboard.html';
-    const linkText = session.role === 'admin' ? 'Admin' : 'Portal';
+    const userIsAdmin = isAdmin();
+    const linkUrl = userIsAdmin ? '/admin.html' : '/dashboard.html';
+    const linkText = userIsAdmin ? (isSuperAdmin() ? 'Super Admin' : 'Admin') : 'Portal';
 
     if (joinBtnDesktop) {
       joinBtnDesktop.href = linkUrl;

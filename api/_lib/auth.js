@@ -93,12 +93,12 @@ export async function requireAuth(req, res, allowedRoles = []) {
 
 // Backwards compatibility wrappers
 export async function requireAdmin(req, res) {
-  return requireAuth(req, res, ['admin']);
+  return requireAuth(req, res, ['super_admin', 'superadmin', 'admin']);
 }
 
 export async function requireMember(req, res) {
-  // Both members and admins can do member things
-  return requireAuth(req, res, ['member', 'admin']);
+  // Super admin, admin, and regular members can do member operations
+  return requireAuth(req, res, ['super_admin', 'superadmin', 'admin', 'member']);
 }
 
 export const createMemberSession = createSession;

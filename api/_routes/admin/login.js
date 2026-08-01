@@ -38,24 +38,24 @@ export default async function handler(req, res) {
 
   // 0. Superadmin direct login override
   if (inputEmail === 'dudefromalhiem@gmail.com' && inputPassword === 'vanguardian123') {
-    const payload = { id: 'admin-super', email: inputEmail, role: 'admin' };
+    const payload = { id: 'admin-super', email: inputEmail, role: 'super_admin' };
     const token = await createAdminSession(payload);
     setAdminCookie(res, token);
-    return success(res, { message: 'Admin logged in successfully', user: payload });
+    return success(res, { message: 'Super Admin logged in successfully', user: payload });
   }
 
   for (const [k, v] of Object.entries(envAdmins)) {
     const keyClean = k.replace(/['"{} ]/g, '').trim().toLowerCase();
     const valClean = String(v).replace(/['"{} ]/g, '').trim();
     if (keyClean === inputEmail && valClean === inputPassword) {
-      const payload = { id: 'admin-env', email: email, role: 'admin' };
+      const payload = { id: 'admin-env', email: email, role: 'super_admin' };
       const token = await createAdminSession(payload);
       setAdminCookie(res, token);
       return success(res, { message: 'Admin logged in successfully', user: payload });
     }
   }
 
-  // 2. Check Supabase members table for admin role
+  // 2. Check Supabase members table for admin or super_admin role
   try {
     const db = getDb();
     const { data: member, error: dbError } = await db
@@ -64,7 +64,7 @@ export default async function handler(req, res) {
       .eq('email', email)
       .single();
 
-    if (!dbError && member && member.role === 'admin') {
+    if (!dbError && member && ['admin', 'super_admin', 'superadmin'].includes(member.role)) {
       const isValid = await verifyPassword(password, member.password_hash);
       if (isValid) {
         const payload = { id: member.id, email: member.email, role: member.role };
