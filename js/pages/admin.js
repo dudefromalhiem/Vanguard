@@ -41,28 +41,50 @@ export async function init() {
       const emailInput = document.getElementById('admin-email');
       const passwordInput = document.getElementById('admin-password');
       const errorDiv = document.getElementById('admin-login-error');
+      const submitBtn = loginForm.querySelector('button[type="submit"]');
       
-      if (errorDiv) errorDiv.style.display = 'none';
+      if (errorDiv) {
+        errorDiv.style.display = 'none';
+        errorDiv.textContent = '';
+      }
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Authenticating...';
+      }
 
       const email = emailInput ? emailInput.value.trim() : '';
       const password = passwordInput ? passwordInput.value : '';
 
       try {
+        console.log('Submitting admin login for:', email);
         const res = await api.post('/api/admin/login', { email, password });
+        console.log('Admin login response:', res);
+        
         if (res.ok) {
           showDashboard();
         } else {
+          const errMsg = res.error || 'Invalid admin credentials';
           if (errorDiv) {
-            errorDiv.textContent = res.error || 'Invalid admin credentials';
+            errorDiv.textContent = errMsg;
             errorDiv.style.display = 'block';
           } else {
-            alert(res.error || 'Invalid admin credentials');
+            alert(errMsg);
           }
         }
       } catch (err) {
+        console.error('Admin login catch error:', err);
+        const errMsg = err.message || 'Login network error';
         if (errorDiv) {
-          errorDiv.textContent = err.message || 'Login error';
+          errorDiv.textContent = errMsg;
           errorDiv.style.display = 'block';
+        } else {
+          alert(errMsg);
+        }
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Log In';
         }
       }
     });
