@@ -13,21 +13,23 @@ export default async function handler(req, res) {
     const query = parseQuery(req);
     const { from, to } = paginate(query);
 
-    // Auto-close expired polls & auto-delete media 24 hours post-expiration
-    const now = new Date();
-    const cutoff24h = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();
+    // Auto-close expired polls & auto-delete media 24 hours post-expiration (safe execution)
+    try {
+      const nowIso = new Date().toISOString();
+      const cutoff24h = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
 
-    // 1. Close active polls whose end_date has passed
-    await db.from('polls')
-      .update({ status: 'Closed' })
-      .eq('status', 'Active')
-      .lt('end_date', now.toISOString());
+      await db.from('polls')
+        .update({ status: 'Closed' })
+        .eq('status', 'Active')
+        .lt('end_date', nowIso);
 
-    // 2. Delete media (image_url) 24 hours after expiration, preserving poll results forever
-    await db.from('polls')
-      .update({ image_url: null })
-      .not('image_url', 'is', null)
-      .lt('end_date', cutoff24h);
+      await db.from('polls')
+        .update({ image_url: null })
+        .neq('image_url', null)
+        .lt('end_date', cutoff24h);
+    } catch (e) {
+      console.warn('Poll cleanup warning:', e?.message || e);
+    }
 
     const { data, error: dbError } = await db.from('polls')
       .select('*, poll_options(*)')
@@ -35,7 +37,7 @@ export default async function handler(req, res) {
       .range(from, to);
       
     if (dbError) return error(res, dbError.message, 500);
-    return success(res, data);
+    return success(res, data || []);
   }
   
   else if (req.method === 'POST' || req.method === 'PUT') {

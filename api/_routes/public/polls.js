@@ -6,19 +6,23 @@ export default async function handler(req, res) {
   const db = getDb();
 
   if (req.method === 'GET') {
-    // Auto-close expired polls & auto-delete media 24 hours post-expiration
-    const now = new Date();
-    const cutoff24h = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();
+    // Auto-close expired polls & auto-delete media 24 hours post-expiration (safe execution)
+    try {
+      const nowIso = new Date().toISOString();
+      const cutoff24h = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
 
-    await db.from('polls')
-      .update({ status: 'Closed' })
-      .eq('status', 'Active')
-      .lt('end_date', now.toISOString());
+      await db.from('polls')
+        .update({ status: 'Closed' })
+        .eq('status', 'Active')
+        .lt('end_date', nowIso);
 
-    await db.from('polls')
-      .update({ image_url: null })
-      .not('image_url', 'is', null)
-      .lt('end_date', cutoff24h);
+      await db.from('polls')
+        .update({ image_url: null })
+        .neq('image_url', null)
+        .lt('end_date', cutoff24h);
+    } catch (e) {
+      console.warn('Public poll cleanup warning:', e?.message || e);
+    }
 
     const { data: polls, error: err } = await db.from('polls')
       .select('*, poll_options(*, poll_votes(count))')
@@ -26,15 +30,14 @@ export default async function handler(req, res) {
     
     if (err) return error(res, err.message, 500);
     
-    const formattedPolls = polls.map(poll => ({
+    const formattedPolls = (polls || []).map(poll => ({
       ...poll,
-      poll_options: poll.poll_options.map(opt => ({
+      poll_options: (poll.poll_options || []).map(opt => ({
         ...opt,
         vote_count: opt.poll_votes && opt.poll_votes.length > 0 ? opt.poll_votes[0].count : 0
       }))
     }));
     return success(res, formattedPolls);
-    
   } else if (req.method === 'POST') {
     const body = await parseBody(req);
     
