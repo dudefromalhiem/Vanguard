@@ -16,24 +16,25 @@ export default async function handler(req, res) {
   const db = getDb();
   const password_hash = await hashPassword(body.password);
 
-  const { data, error: dbError } = await db.from('membership_applications').insert([{
+  const payload = {
     name: body.name,
     email: body.email,
-    phone: body.phone,
-    usn: body.usn,
-    branch: body.branch,
-    semester: body.semester,
-    why_join: body.why_join,
-    preferred_wing: body.preferred_wing,
-    password_hash: password_hash
-  }]);
+    phone: body.phone || null,
+    branch: body.branch || null,
+    semester: body.semester || null,
+    why_join: body.why_join || body['why-join'] || null,
+    password_hash: password_hash,
+    status: 'pending'
+  };
+
+  const { data, error: dbError } = await db.from('membership_applications').insert([payload]).select().single();
 
   if (dbError) {
     if (dbError.code === '23505') {
       return error(res, 'Email already in use for an application or membership', 409);
     }
-    return error(res, 'Failed to submit application', 500);
+    return error(res, 'Failed to submit application: ' + dbError.message, 500);
   }
 
-  return success(res, { message: 'Application submitted successfully' }, 201);
+  return success(res, { message: 'Application submitted successfully', data }, 201);
 }
