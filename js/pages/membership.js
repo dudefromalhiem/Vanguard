@@ -33,22 +33,35 @@ export function init() {
   if (statusForm) {
     statusForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const email = document.getElementById('status-email').value;
+      const emailInput = document.getElementById('status-email');
+      const email = emailInput ? emailInput.value.trim() : '';
+      if (!email) return;
       
+      if (statusResult) statusResult.innerHTML = '<p style="color:var(--text-secondary);">Checking status...</p>';
+
       try {
         const response = await api.post('/api/member/status', { email });
-        if (response.success) {
-          const { status, applied_at, reviewed_at } = response.data;
+        if (response.ok || response.success) {
+          const data = response.data || response;
+          const status = data.status || 'pending';
+          const isApproved = status === 'approved' || status === 'accepted';
+          const isRejected = status === 'rejected';
+          const statusColor = isApproved ? '#166534' : (isRejected ? '#ef4444' : 'var(--accent-color)');
+          
           statusResult.innerHTML = `
-            <p>Status: <strong>${status}</strong></p>
-            <p>Applied on: ${new Date(applied_at).toLocaleDateString()}</p>
-            ${reviewed_at ? `<p>Reviewed on: ${new Date(reviewed_at).toLocaleDateString()}</p>` : ''}
+            <div class="card" style="padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border-color);">
+              <h4 style="margin-bottom: 0.5rem;">Application Status</h4>
+              <p style="margin-bottom: 0.5rem;">Status: <strong style="color:${statusColor}; text-transform: uppercase;">${status}</strong></p>
+              <p style="font-size: 0.875rem; color: var(--text-secondary);">Submitted: ${new Date(data.applied_at || Date.now()).toLocaleDateString()}</p>
+              ${data.reviewed_at ? `<p style="font-size: 0.875rem; color: var(--text-secondary);">Reviewed: ${new Date(data.reviewed_at).toLocaleDateString()}</p>` : ''}
+              ${isApproved ? '<p style="margin-top:0.75rem; color:#166534; font-weight:600;">🎉 Your application is approved! You can now <a href="/login.html" style="color:var(--accent-color); text-decoration:underline;">login</a> to access your member account.</p>' : ''}
+            </div>
           `;
         } else {
-          statusResult.innerHTML = `<p class="error">${response.error || 'Application not found'}</p>`;
+          statusResult.innerHTML = `<p style="color:#ef4444; font-weight:500;">${response.error || 'No application found for this email address.'}</p>`;
         }
       } catch (err) {
-        statusResult.innerHTML = '<p class="error">An error occurred</p>';
+        statusResult.innerHTML = '<p style="color:#ef4444;">An error occurred while checking application status.</p>';
       }
     });
   }

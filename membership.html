@@ -77,12 +77,18 @@
       </div>
     </section>
 
-    <section id="status-tracker" class="section">
-      <div class="container">
+    <section id="status-tracker" class="section" style="border-top: 1px solid var(--border-color);">
+      <div class="container" style="max-width: 600px;">
         <div class="section-header">
-          <h2>Status Tracker</h2>
-          <p>Check the status of your application.</p>
+          <h2>Application Status Tracker</h2>
+          <p>Already applied? Enter your email address to track your membership application status.</p>
         </div>
+        <form id="status-form" style="margin-bottom: 1.5rem;">
+          <div class="form-group" style="display: flex; gap: 0.75rem;">
+            <input type="email" id="status-email" class="form-input" placeholder="Enter your registered email address" required style="flex: 1;">
+            <button type="submit" class="btn btn-primary" style="white-space: nowrap;">Check Status</button>
+          </div>
+        </form>
         <div id="status-result"></div>
       </div>
     </section>
