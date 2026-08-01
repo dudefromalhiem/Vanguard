@@ -21,9 +21,13 @@ export async function init() {
             const data = Object.fromEntries(formData.entries());
 
             try {
-                await api.post('/api/contact', data);
+                const res = await api.post('/api/public/contact', data);
+            if (res.ok || res.success) {
                 showToast('Message sent successfully!', 'success');
                 contactForm.reset();
+            } else {
+                showToast(res.error || 'Failed to send message', 'error');
+            }
             } catch (apiError) {
                 console.warn('API submission failed, falling back to mailto', apiError);
                 // Fallback to mailto link

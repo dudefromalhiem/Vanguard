@@ -43,10 +43,13 @@ export async function init() {
 
     window.showEventDetail = async (eventId) => {
         try {
-            const event = await api.get(`/api/events/${eventId}`);
+            const res = await api.get(`/api/public/events?id=${eventId}`);
+            const event = res?.data || res;
+            if (!event || !event.title) throw new Error('Event not found');
+
             document.getElementById('modal-title').textContent = event.title;
-            document.getElementById('modal-desc').textContent = event.description;
-            document.getElementById('modal-date').textContent = formatDate(event.date);
+            document.getElementById('modal-desc').textContent = event.description || '';
+            document.getElementById('modal-date').textContent = formatDate(event.event_date || event.date);
             
             const registerBtn = document.getElementById('register-btn');
             if (registerBtn) {
@@ -72,7 +75,7 @@ export async function init() {
 
     async function registerForEvent(eventId) {
         try {
-            await api.post(`/api/events/${eventId}/register`);
+            const res = await api.post('/api/member/events', { event_id: eventId, action: 'register' });
             showToast('Successfully registered!', 'success');
             closeModal('event-modal');
         } catch (error) {

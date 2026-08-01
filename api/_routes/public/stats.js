@@ -13,7 +13,7 @@ export default async function handler(req, res) {
     { count: resourcesCount }
   ] = await Promise.all([
     db.from('members').select('*', { count: 'exact', head: true }),
-    db.from('team_members').select('*', { count: 'exact', head: true }).eq('category', 'faculty'),
+    db.from('team').select('*', { count: 'exact', head: true }).eq('category', 'faculty'),
     db.from('events').select('*', { count: 'exact', head: true }),
     db.from('projects').select('*', { count: 'exact', head: true }).neq('status', 'archived'),
     db.from('resources').select('*', { count: 'exact', head: true })

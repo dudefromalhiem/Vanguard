@@ -44,14 +44,15 @@ export async function init() {
 
     window.openAlbum = async (albumId) => {
         try {
-            const album = await api.get(`/api/gallery/${albumId}`);
+            const res = await api.get(`/api/public/gallery?id=${albumId}`);
+            const album = res?.data || res;
             const modalContent = document.getElementById('lightbox-content');
-            if (modalContent) {
+            if (modalContent && album) {
                 modalContent.innerHTML = `
-                    <h2>${album.title}</h2>
+                    <h2>${album.title || 'Gallery Album'}</h2>
                     <div class="image-grid">
-                        ${album.images.map(img => `
-                            <img src="${img.url}" alt="${img.caption || ''}" loading="lazy">
+                        ${(album.images || []).map(img => `
+                            <img src="${typeof img === 'string' ? img : img.url}" alt="${img.caption || ''}" loading="lazy" style="max-width:100%; border-radius:4px;">
                         `).join('')}
                     </div>
                 `;

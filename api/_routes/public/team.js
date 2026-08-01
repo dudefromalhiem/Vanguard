@@ -7,7 +7,7 @@ export default async function handler(req, res) {
   const query = parseQuery(req);
   const { category, wing } = query;
 
-  let dbQuery = db.from('team_members').select('*').eq('is_active', true).order('sort_order', { ascending: true });
+  let dbQuery = db.from('team').select('*').eq('is_active', true).order('sort_order', { ascending: true });
   
   if (category) dbQuery = dbQuery.eq('category', category);
   if (wing) dbQuery = dbQuery.eq('wing', wing);

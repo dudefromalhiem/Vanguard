@@ -11,68 +11,34 @@ export default async function handler(req, res) {
 
   if (req.method === 'GET') {
     const { from, to } = paginate(query);
-    if (query.album_id) {
-      const { data, error: dbError } = await db.from('gallery_images')
-        .select('*')
-        .eq('album_id', query.album_id)
-        .order('created_at', { ascending: false })
-        .range(from, to);
-      if (dbError) return error(res, dbError.message, 500);
-      return success(res, data);
-    } else {
-      const { data, error: dbError } = await db.from('gallery_albums')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .range(from, to);
-      if (dbError) return error(res, dbError.message, 500);
-      return success(res, data);
-    }
+    const { data, error: dbError } = await db.from('gallery')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .range(from, to);
+    if (dbError) return error(res, dbError.message, 500);
+    return success(res, data || []);
   }
   
   else if (req.method === 'POST') {
     const body = parseBody(req);
-    if (body.album_id) {
-      const { data, error: dbError } = await db.from('gallery_images').insert([body]).select().single();
-      if (dbError) return error(res, dbError.message, 500);
-      return success(res, data, 201);
-    } else {
-      const { data, error: dbError } = await db.from('gallery_albums').insert([body]).select().single();
-      if (dbError) return error(res, dbError.message, 500);
-      return success(res, data, 201);
-    }
+    const { data, error: dbError } = await db.from('gallery').insert([body]).select().single();
+    if (dbError) return error(res, dbError.message, 500);
+    return success(res, data, 201);
   }
   
   else if (req.method === 'PUT') {
     if (!query.id) return error(res, 'Missing id parameter', 400);
     const body = parseBody(req);
-    
-    if (query.type === 'image') {
-      const { data, error: dbError } = await db.from('gallery_images').update(body).eq('id', query.id).select().single();
-      if (dbError) return error(res, dbError.message, 500);
-      return success(res, data);
-    } else if (query.type === 'album') {
-      const { data, error: dbError } = await db.from('gallery_albums').update(body).eq('id', query.id).select().single();
-      if (dbError) return error(res, dbError.message, 500);
-      return success(res, data);
-    } else {
-      return error(res, 'Specify ?type=image or ?type=album', 400);
-    }
+    const { data, error: dbError } = await db.from('gallery').update(body).eq('id', query.id).select().single();
+    if (dbError) return error(res, dbError.message, 500);
+    return success(res, data);
   }
   
   else if (req.method === 'DELETE') {
     if (!query.id) return error(res, 'Missing id parameter', 400);
-    
-    if (query.type === 'image') {
-      const { error: dbError } = await db.from('gallery_images').delete().eq('id', query.id);
-      if (dbError) return error(res, dbError.message, 500);
-      return success(res, { message: 'Image deleted successfully' });
-    } else if (query.type === 'album') {
-      const { error: dbError } = await db.from('gallery_albums').delete().eq('id', query.id);
-      if (dbError) return error(res, dbError.message, 500);
-      return success(res, { message: 'Album deleted successfully' });
-    } else {
-      return error(res, 'Specify ?type=image or ?type=album', 400);
-    }
+    const { error: dbError } = await db.from('gallery').delete().eq('id', query.id);
+    if (dbError) return error(res, dbError.message, 500);
+    return success(res, { message: 'Album deleted successfully' });
   }
   
   else {

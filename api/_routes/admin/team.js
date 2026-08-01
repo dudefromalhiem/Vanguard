@@ -12,7 +12,7 @@ export default async function handler(req, res) {
   if (req.method === 'GET') {
     const query = parseQuery(req);
     const { from, to } = paginate(query);
-    const { data, error: dbError } = await db.from('team_members')
+    const { data, error: dbError } = await db.from('team')
       .select('*')
       .order('created_at', { ascending: false })
       .range(from, to);
@@ -26,7 +26,7 @@ export default async function handler(req, res) {
     const errors = validateRequired(body, ['name', 'role', 'category']);
     if (errors.length > 0) return error(res, `Missing fields: ${errors.join(', ')}`, 400);
     
-    const { data, error: dbError } = await db.from('team_members').insert([body]).select().single();
+    const { data, error: dbError } = await db.from('team').insert([body]).select().single();
     if (dbError) return error(res, dbError.message, 500);
     return success(res, data, 201);
   }
@@ -36,7 +36,7 @@ export default async function handler(req, res) {
     if (!query.id) return error(res, 'Missing id parameter', 400);
     
     const body = parseBody(req);
-    const { data, error: dbError } = await db.from('team_members').update(body).eq('id', query.id).select().single();
+    const { data, error: dbError } = await db.from('team').update(body).eq('id', query.id).select().single();
     if (dbError) return error(res, dbError.message, 500);
     return success(res, data);
   }
@@ -45,7 +45,7 @@ export default async function handler(req, res) {
     const query = parseQuery(req);
     if (!query.id) return error(res, 'Missing id parameter', 400);
     
-    const { error: dbError } = await db.from('team_members').delete().eq('id', query.id);
+    const { error: dbError } = await db.from('team').delete().eq('id', query.id);
     if (dbError) return error(res, dbError.message, 500);
     return success(res, { message: 'Deleted successfully' });
   }

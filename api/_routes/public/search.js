@@ -13,7 +13,7 @@ export default async function handler(req, res) {
     db.from('events').select('id, title, slug, type:"event"').or(`title.ilike.%${q}%,description.ilike.%${q}%`).limit(5),
     db.from('projects').select('id, title, slug, type:"project"').neq('status', 'archived').or(`title.ilike.%${q}%,description.ilike.%${q}%`).limit(5),
     db.from('resources').select('id, title, type:"resource"').or(`title.ilike.%${q}%,description.ilike.%${q}%`).limit(5),
-    db.from('team_members').select('id, name as title, type:"team"').eq('is_active', true).or(`name.ilike.%${q}%,role.ilike.%${q}%`).limit(5),
+    db.from('team').select('id, name as title, type:"team"').eq('is_active', true).or(`name.ilike.%${q}%,role.ilike.%${q}%`).limit(5),
     db.from('faqs').select('id, question as title, type:"faq"').or(`question.ilike.%${q}%,answer.ilike.%${q}%`).limit(5),
     db.from('polls').select('id, title, type:"poll"').neq('status', 'Draft').or(`title.ilike.%${q}%,description.ilike.%${q}%`).limit(5)
   ]);

@@ -47,10 +47,13 @@ export async function init() {
 
     window.showProjectDetail = async (projectId) => {
         try {
-            const project = await api.get(`/api/projects/${projectId}`);
+            const res = await api.get(`/api/public/projects?id=${projectId}`);
+            const project = res?.data || res;
+            if (!project || !project.title) throw new Error('Project details not found');
+
             document.getElementById('modal-title').textContent = project.title;
-            document.getElementById('modal-status').textContent = project.status;
-            document.getElementById('modal-desc').innerHTML = project.description;
+            document.getElementById('modal-status').textContent = project.status || 'Active';
+            document.getElementById('modal-desc').innerHTML = project.description || project.summary || '';
             
             const repoLink = document.getElementById('modal-repo-link');
             if (repoLink) {
