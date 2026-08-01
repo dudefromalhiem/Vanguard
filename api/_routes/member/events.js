@@ -1,8 +1,8 @@
-import { getDb } from '../_lib/db.js';
-import { requireMember } from '../_lib/auth.js';
-import { success, error, methodNotAllowed, parseBody } from '../_lib/response.js';
-import { validateRequired } from '../_lib/validate.js';
-import { notifyEventRegistration } from '../_lib/email.js';
+import { getDb } from '../../_lib/db.js';
+import { requireMember } from '../../_lib/auth.js';
+import { success, error, methodNotAllowed, parseBody } from '../../_lib/response.js';
+import { validateRequired } from '../../_lib/validate.js';
+import { notifyEventRegistration } from '../../_lib/email.js';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {

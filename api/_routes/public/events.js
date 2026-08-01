@@ -1,5 +1,5 @@
-import { getDb } from '../_lib/db.js';
-import { success, error, methodNotAllowed, parseQuery, paginate } from '../_lib/response.js';
+import { getDb } from '../../_lib/db.js';
+import { success, error, methodNotAllowed, parseQuery, paginate } from '../../_lib/response.js';
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') return methodNotAllowed(res, ['GET']);

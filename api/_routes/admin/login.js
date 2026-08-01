@@ -1,7 +1,7 @@
-import { getDb } from '../_lib/db.js';
-import { verifyPassword, createAdminSession, setAdminCookie } from '../_lib/auth.js';
-import { success, error, methodNotAllowed, parseBody } from '../_lib/response.js';
-import { validateRequired } from '../_lib/validate.js';
+import { getDb } from '../../_lib/db.js';
+import { verifyPassword, createAdminSession, setAdminCookie } from '../../_lib/auth.js';
+import { success, error, methodNotAllowed, parseBody } from '../../_lib/response.js';
+import { validateRequired } from '../../_lib/validate.js';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {

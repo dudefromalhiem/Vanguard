@@ -1,7 +1,7 @@
-import { getDb } from '../_lib/db.js';
-import { hashPassword } from '../_lib/auth.js';
-import { success, error, methodNotAllowed, parseBody } from '../_lib/response.js';
-import { validateRequired, validateEmail } from '../_lib/validate.js';
+import { getDb } from '../../_lib/db.js';
+import { hashPassword } from '../../_lib/auth.js';
+import { success, error, methodNotAllowed, parseBody } from '../../_lib/response.js';
+import { validateRequired, validateEmail } from '../../_lib/validate.js';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return methodNotAllowed(res, ['POST']);

@@ -45,11 +45,13 @@ export function setSessionCookie(res, token) {
     maxAge: 7 * 24 * 60 * 60
   });
   
-  const existing = res.getHeader('Set-Cookie');
-  if (existing) {
-    res.setHeader('Set-Cookie', [].concat(existing, cookie));
-  } else {
-    res.setHeader('Set-Cookie', cookie);
+  if (typeof res.setHeader === 'function') {
+    const existing = typeof res.getHeader === 'function' ? res.getHeader('Set-Cookie') : null;
+    if (existing) {
+      res.setHeader('Set-Cookie', [].concat(existing, cookie));
+    } else {
+      res.setHeader('Set-Cookie', cookie);
+    }
   }
 }
 
@@ -61,7 +63,9 @@ export function clearSessionCookie(res) {
     path: '/',
     expires: new Date(0)
   });
-  res.setHeader('Set-Cookie', cookie);
+  if (typeof res.setHeader === 'function') {
+    res.setHeader('Set-Cookie', cookie);
+  }
 }
 
 export function getSessionToken(req) {

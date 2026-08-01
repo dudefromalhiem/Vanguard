@@ -1,6 +1,6 @@
-import { getDb } from '../_lib/db.js';
-import { requireAuth } from '../_lib/auth.js';
-import { success, error, methodNotAllowed, parseBody } from '../_lib/response.js';
+import { getDb } from '../../_lib/db.js';
+import { requireAuth } from '../../_lib/auth.js';
+import { success, error, methodNotAllowed, parseBody } from '../../_lib/response.js';
 
 export default async function handler(req, res) {
   const db = getDb();

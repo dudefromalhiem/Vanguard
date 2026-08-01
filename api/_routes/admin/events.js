@@ -1,7 +1,7 @@
-import { getDb } from '../_lib/db.js';
-import { requireAdmin } from '../_lib/auth.js';
-import { success, error, methodNotAllowed, parseBody, parseQuery, paginate } from '../_lib/response.js';
-import { validateRequired, slugify } from '../_lib/validate.js';
+import { getDb } from '../../_lib/db.js';
+import { requireAdmin } from '../../_lib/auth.js';
+import { success, error, methodNotAllowed, parseBody, parseQuery, paginate } from '../../_lib/response.js';
+import { validateRequired, slugify } from '../../_lib/validate.js';
 
 export default async function handler(req, res) {
   const payload = await requireAdmin(req, res);

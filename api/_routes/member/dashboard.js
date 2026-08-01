@@ -1,6 +1,6 @@
-import { getDb } from '../_lib/db.js';
-import { requireMember } from '../_lib/auth.js';
-import { success, error, methodNotAllowed } from '../_lib/response.js';
+import { getDb } from '../../_lib/db.js';
+import { requireMember } from '../../_lib/auth.js';
+import { success, error, methodNotAllowed } from '../../_lib/response.js';
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
