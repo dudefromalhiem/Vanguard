@@ -38,10 +38,12 @@ export async function init() {
             const res = await api.get('/api/public/polls');
             if (!res.ok) throw new Error(res.error);
             const polls = res.data;
-            const active = polls.filter(p => p.status === 'Active');
+            const official = polls.filter(p => p.status === 'Active' && p.tags && p.tags.includes('official'));
+            const community = polls.filter(p => p.status === 'Active' && (!p.tags || !p.tags.includes('official')));
             const past = polls.filter(p => p.status === 'Closed');
 
-            renderActivePolls(active);
+            renderPollList(document.getElementById('official-polls-list'), official, 'No official society polls active at the moment.');
+            renderPollList(document.getElementById('community-polls-list'), community, 'No community polls active. Click above to launch one!');
             renderPastPolls(past);
         } catch (error) {
             console.error('Error loading polls:', error);
@@ -49,12 +51,11 @@ export async function init() {
         }
     }
 
-    function renderActivePolls(polls) {
-        if (!activePollsContainer) return;
-        const listDiv = activePollsContainer.querySelector('#active-polls-list') || activePollsContainer;
+    function renderPollList(listDiv, polls, emptyText) {
+        if (!listDiv) return;
         
         if (polls.length === 0) {
-            listDiv.innerHTML = '<p>No active polls at the moment.</p>';
+            listDiv.innerHTML = `<p style="color:var(--text-secondary);">${emptyText}</p>`;
             return;
         }
 
@@ -62,10 +63,12 @@ export async function init() {
 
         listDiv.innerHTML = polls.map(poll => {
             const voted = localStorage.getItem(`voted_poll_${poll.id}`);
+            const imageHtml = poll.image_url ? `<img src="${poll.image_url}" style="max-height: 200px; width: 100%; object-fit: cover; border-radius: 8px; margin-bottom: 1rem;">` : '';
             
             if (!authenticated) {
                 return `
                     <div class="poll-card">
+                        ${imageHtml}
                         <h3>${poll.title}</h3>
                         <p style="color:var(--text-secondary);font-size:0.875rem;margin-bottom:1rem;">${poll.description || ''}</p>
                         <p style="font-weight:600;">You must <a href="/login.html" style="color:var(--primary-color);">log in</a> to vote.</p>
@@ -76,6 +79,7 @@ export async function init() {
             if (voted) {
                 return `
                     <div class="poll-card">
+                        ${imageHtml}
                         <h3>${poll.title}</h3>
                         <p>You have already voted in this poll.</p>
                     </div>
@@ -84,10 +88,11 @@ export async function init() {
 
             return `
                 <div class="poll-card" id="poll-${poll.id}">
+                    ${imageHtml}
                     <h3>${poll.title}</h3>
                     <p style="color:var(--text-secondary);font-size:0.875rem;margin-bottom:1rem;">${poll.description || ''}</p>
                     <form onsubmit="window.submitVote(event, '${poll.id}')">
-                        ${poll.poll_options.map((opt) => `
+                        ${(poll.poll_options || []).map((opt) => `
                             <div style="margin-bottom:0.5rem;display:flex;align-items:center;gap:0.5rem;">
                                 <input type="radio" name="option_id" value="${opt.id}" id="opt-${opt.id}" required>
                                 <label for="opt-${opt.id}">${opt.option_text}</label>

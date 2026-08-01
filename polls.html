@@ -10,17 +10,29 @@
 <body>
   <header data-component="header"></header>
   <main id="main-content">
-    <section id="active-polls" class="section">
+    <section id="official-polls" class="section">
       <div class="container">
-        <div class="section-header" style="display: flex; align-items: center; justify-content: space-between;">
+        <div class="section-header">
+          <h2>Official Society Polls</h2>
+          <p>Featured votes and decision-making forums by Vanguard Leadership.</p>
+        </div>
+        <div class="cards-grid">
+          <div id="official-polls-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="active-polls" class="section" style="padding-top: 0;">
+      <div class="container">
+        <div class="section-header" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
           <div>
-            <h2>Active Polls</h2>
-            <p>Participate in ongoing discussions and decisions.</p>
+            <h2>Community Polls</h2>
+            <p>Participate in member-created topics and ideas.</p>
           </div>
           <button class="btn btn-primary" id="btn-open-public-poll-modal">+ Create Community Poll</button>
         </div>
-        <div id="polls-container" class="cards-grid">
-          <div id="active-polls-list"></div>
+        <div class="cards-grid">
+          <div id="community-polls-list"></div>
         </div>
       </div>
     </section>

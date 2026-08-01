@@ -95,7 +95,7 @@ export default async function handler(req, res) {
       start_date: startDate.toISOString(),
       end_date: body.end_date || endDate.toISOString(),
       image_url: body.image_url || body.media_url || null,
-      tags: body.tags || [],
+      tags: ['official'],
       created_by: isValidUuid ? payload.id : null
     }]).select().single();
     

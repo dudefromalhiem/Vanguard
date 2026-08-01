@@ -345,30 +345,44 @@ export async function init() {
   }
 
   async function loadPolls() {
-    const tbody = document.getElementById('polls-table-body');
-    if (!tbody) return;
-    tbody.innerHTML = '<tr><td colspan="5">Loading polls...</td></tr>';
+    const officialTbody = document.getElementById('official-polls-table-body');
+    const communityTbody = document.getElementById('community-polls-table-body');
+    
+    if (officialTbody) officialTbody.innerHTML = '<tr><td colspan="5">Loading official polls...</td></tr>';
+    if (communityTbody) communityTbody.innerHTML = '<tr><td colspan="5">Loading community polls...</td></tr>';
 
     const res = await api.get('/api/admin/polls');
     const items = extractArray(res);
 
+    const officialItems = items.filter(p => p.tags && p.tags.includes('official'));
+    const communityItems = items.filter(p => !p.tags || !p.tags.includes('official'));
+
+    renderAdminPollTable(officialTbody, officialItems, 'No official society polls created');
+    renderAdminPollTable(communityTbody, communityItems, 'No community polls created');
+  }
+
+  function renderAdminPollTable(tbody, items, emptyText) {
+    if (!tbody) return;
     if (items.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="5">No polls created</td></tr>';
+      tbody.innerHTML = `<tr><td colspan="5">${emptyText}</td></tr>`;
       return;
     }
 
-    tbody.innerHTML = items.map(p => `
-      <tr>
-        <td><strong>${escapeHtml(p.title)}</strong></td>
-        <td><span class="badge ${p.status === 'Active' ? 'badge-approved' : 'badge-rejected'}">${escapeHtml(p.status || 'Active')}</span></td>
-        <td>${Array.isArray(p.options) ? p.options.length : 'Multiple'} Options</td>
-        <td>${p.image_url ? `<a href="${escapeHtml(p.image_url)}" target="_blank" style="color: var(--admin-gold); text-decoration: underline;">Attached Image</a>` : '<span style="color:var(--admin-text-muted);">None (or Auto-Cleared)</span>'}</td>
-        <td>
-          <button class="btn-admin-gold" style="padding: 0.25rem 0.625rem; font-size: 0.75rem; margin-right: 0.375rem;" onclick="window.postponePoll('${p.id}')">+ Extend 24h</button>
-          <button class="btn-admin-outline" style="padding: 0.25rem 0.625rem; font-size: 0.75rem; color: #ef4444;" onclick="window.deleteItem('polls', '${p.id}')">Delete</button>
-        </td>
-      </tr>
-    `).join('');
+    tbody.innerHTML = items.map(p => {
+      const optionCount = Array.isArray(p.poll_options) ? p.poll_options.length : (Array.isArray(p.options) ? p.options.length : 'Multiple');
+      return `
+        <tr>
+          <td><strong>${escapeHtml(p.title)}</strong></td>
+          <td><span class="badge ${p.status === 'Active' ? 'badge-approved' : 'badge-rejected'}">${escapeHtml(p.status || 'Active')}</span></td>
+          <td>${optionCount} Options</td>
+          <td>${p.image_url ? `<a href="${escapeHtml(p.image_url)}" target="_blank" style="color: var(--admin-gold); text-decoration: underline;">View Attachment</a>` : '<span style="color:var(--admin-text-muted);">None</span>'}</td>
+          <td>
+            <button class="btn-admin-gold" style="padding: 0.25rem 0.625rem; font-size: 0.75rem; margin-right: 0.375rem;" onclick="window.postponePoll('${p.id}')">+ Extend 24h</button>
+            <button class="btn-admin-outline" style="padding: 0.25rem 0.625rem; font-size: 0.75rem; color: #ef4444; border-color: #ef4444;" onclick="window.deleteItem('polls', '${p.id}')">Delete</button>
+          </td>
+        </tr>
+      `;
+    }).join('');
   }
 
   // Global Actions

@@ -183,8 +183,28 @@
                 <!-- 5. Polls Tab -->
                 <div class="admin-pane" id="tab-polls">
                     <div class="pane-header">
-                        <h3>Community Polls</h3>
-                        <button class="btn-admin-gold" id="btn-open-poll-modal">+ Create Poll (with Media)</button>
+                        <h3>Official Society Polls</h3>
+                        <button class="btn-admin-gold" id="btn-open-poll-modal">+ Launch Official Poll</button>
+                    </div>
+                    <div class="admin-table-container" style="margin-bottom: 2rem;">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Poll Question</th>
+                                    <th>Status</th>
+                                    <th>Options</th>
+                                    <th>Attached Media</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="official-polls-table-body">
+                                <tr><td colspan="5">Loading official polls...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="pane-header">
+                        <h3>Community Polls (Member Submitted)</h3>
                     </div>
                     <div class="admin-table-container">
                         <table class="admin-table">
@@ -197,8 +217,8 @@
                                     <th>Actions</th>
                                 </tr>
                             </thead>
-                            <tbody id="polls-table-body">
-                                <tr><td colspan="5">Loading polls...</td></tr>
+                            <tbody id="community-polls-table-body">
+                                <tr><td colspan="5">Loading community polls...</td></tr>
                             </tbody>
                         </table>
                     </div>
