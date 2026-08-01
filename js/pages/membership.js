@@ -1,7 +1,7 @@
 import { api } from '../modules/api.js';
 
 export function init() {
-  const applicationForm = document.getElementById('application-form');
+  const applicationForm = document.getElementById('membership-form') || document.getElementById('application-form');
   const statusForm = document.getElementById('status-form');
   const statusResult = document.getElementById('status-result');
 
@@ -11,16 +11,21 @@ export function init() {
       const formData = new FormData(applicationForm);
       const data = Object.fromEntries(formData);
       
+      if (data.password && data['confirm-password'] && data.password !== data['confirm-password']) {
+        alert('Passwords do not match');
+        return;
+      }
+
       try {
         const response = await api.post('/api/member/register', data);
-        if (response.success) {
-          alert('Application submitted successfully!');
+        if (response.ok || response.success) {
+          alert('Application submitted successfully! Your membership status is pending admin approval.');
           applicationForm.reset();
         } else {
           alert(response.error || 'Failed to submit application');
         }
       } catch (err) {
-        alert('An error occurred');
+        alert('An error occurred while submitting your application.');
       }
     });
   }

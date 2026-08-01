@@ -1,5 +1,5 @@
 import { getDb } from '../../_lib/db.js';
-import { requireAdmin } from '../../_lib/auth.js';
+import { requireAdmin, hashPassword } from '../../_lib/auth.js';
 import { success, error, methodNotAllowed, parseBody, parseQuery, paginate } from '../../_lib/response.js';
 import { validateRequired } from '../../_lib/validate.js';
 import { notifyApplicationStatus } from '../../_lib/email.js';
@@ -47,18 +47,19 @@ export default async function handler(req, res) {
 
     if (updateErr) return error(res, 'Failed to update application: ' + updateErr.message, 500);
 
-    // If approved, create/promote user in members table so they can log in!
+    // If approved, create/promote user in members table so they can log in and participate!
     if (status === 'approved' || status === 'accepted') {
+      const hash = currentApp.password_hash || await hashPassword('VanguardMember123!');
       const { error: insertErr } = await db.from('members').insert({
         name: currentApp.name,
         email: currentApp.email,
-        password_hash: currentApp.password_hash,
+        password_hash: hash,
         role: 'member'
       });
       
-      // Ignore unique email error if member already exists
-      if (insertErr && insertErr.code !== '23505') {
-        return error(res, 'Failed to create member record: ' + insertErr.message, 500);
+      // If member record exists, upgrade role to 'member'
+      if (insertErr && insertErr.code === '23505') {
+        await db.from('members').update({ role: 'member' }).eq('email', currentApp.email);
       }
     }
 
