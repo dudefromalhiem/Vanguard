@@ -1,12 +1,9 @@
 export function validateRequired(obj, fields) {
-  const missing = fields.filter(f => {
+  if (!obj || typeof obj !== 'object') return fields;
+  return fields.filter(f => {
     const val = obj[f];
     return val === undefined || val === null || (typeof val === 'string' && val.trim() === '');
   });
-  if (missing.length > 0) {
-    return `Missing required fields: ${missing.join(', ')}`;
-  }
-  return null;
 }
 
 export function validateEmail(email) {

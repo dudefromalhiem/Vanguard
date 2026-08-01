@@ -18,7 +18,7 @@ export default async function handler(req, res) {
     return success(res, { data, count, limit, offset });
   } else if (req.method === 'POST') {
     const body = await parseBody(req);
-    if (!validateRequired(body, ['name'])) return error(res, 'Missing required fields', 400);
+    if (validateRequired(body, ['name']).length > 0) return error(res, 'Missing required fields', 400);
     const { data, error: err } = await db.from('partners').insert(body).select().single();
     if (err) return error(res, err.message, 500);
     return success(res, data, 201);
