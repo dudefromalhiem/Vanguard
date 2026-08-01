@@ -43,7 +43,7 @@ export async function init() {
             const past = polls.filter(p => p.status === 'Closed');
 
             renderPollList(document.getElementById('official-polls-list'), official, 'No official society polls active at the moment.');
-            renderPollList(document.getElementById('community-polls-list'), community, 'No community polls active. Click above to launch one!');
+            renderPollList(document.getElementById('community-polls-list'), community, 'No community polls active. Click below to launch one!');
             renderPastPolls(past);
         } catch (error) {
             console.error('Error loading polls:', error);
