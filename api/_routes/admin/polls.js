@@ -115,9 +115,15 @@ export default async function handler(req, res) {
   
   else if (req.method === 'DELETE') {
     const query = parseQuery(req);
-    if (!query.id) return error(res, 'Missing id parameter', 400);
+    let pollId = query.id || (req.query?.slug && req.query.slug.length > 2 ? req.query.slug[2] : null);
+    if (!pollId && req.url) {
+      const parts = req.url.split('?')[0].split('/');
+      pollId = parts[parts.length - 1];
+    }
+
+    if (!pollId || pollId === 'polls') return error(res, 'Missing id parameter', 400);
     
-    const { error: dbError } = await db.from('polls').delete().eq('id', query.id);
+    const { error: dbError } = await db.from('polls').delete().eq('id', pollId);
     if (dbError) return error(res, dbError.message, 500);
     return success(res, { message: 'Deleted successfully' });
   }

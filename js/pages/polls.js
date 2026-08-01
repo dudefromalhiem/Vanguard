@@ -77,11 +77,30 @@ export async function init() {
             }
 
             if (voted) {
+                const totalVotes = (poll.poll_options || []).reduce((sum, opt) => sum + (opt.vote_count || 0), 0);
                 return `
                     <div class="poll-card">
                         ${imageHtml}
+                        <span class="badge badge-primary" style="margin-bottom:0.5rem; background: var(--accent-color); color:#fff; border:none;">Voted</span>
                         <h3>${poll.title}</h3>
-                        <p>You have already voted in this poll.</p>
+                        <p style="color:var(--text-secondary);font-size:0.875rem;margin-bottom:1rem;">${poll.description || ''}</p>
+                        <div class="chart" style="margin-top:1rem;">
+                            ${(poll.poll_options || []).map(opt => {
+                                const percent = totalVotes === 0 ? 0 : Math.round(((opt.vote_count || 0) / totalVotes) * 100);
+                                return `
+                                    <div class="bar-row" style="margin-bottom:0.75rem;">
+                                        <div style="display:flex;justify-content:space-between;margin-bottom:0.25rem;">
+                                            <span style="font-size:0.875rem;font-weight:500;">${opt.option_text}</span>
+                                            <span style="font-size:0.875rem;font-weight:600;">${percent}% (${opt.vote_count || 0})</span>
+                                        </div>
+                                        <div style="background:var(--border-color);height:8px;border-radius:4px;overflow:hidden;">
+                                            <div style="background:var(--accent-color);height:100%;width:${percent}%;transition:width 0.8s ease;"></div>
+                                        </div>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                        <p style="margin-top:0.75rem;font-size:0.75rem;color:var(--text-tertiary);">Total votes: ${totalVotes}</p>
                     </div>
                 `;
             }
@@ -110,32 +129,37 @@ export async function init() {
         const listDiv = pastPollsContainer.querySelector('#past-polls-list') || pastPollsContainer;
         
         if (polls.length === 0) {
-            listDiv.innerHTML = '<p>No past polls found.</p>';
+            listDiv.innerHTML = '<p style="color:var(--text-secondary);">No past polls found.</p>';
             return;
         }
 
         listDiv.innerHTML = polls.map(poll => {
-            const totalVotes = poll.poll_options.reduce((sum, opt) => sum + (opt.vote_count || 0), 0);
+            const totalVotes = (poll.poll_options || []).reduce((sum, opt) => sum + (opt.vote_count || 0), 0);
+            const imageHtml = poll.image_url ? `<img src="${poll.image_url}" style="max-height: 200px; width: 100%; object-fit: cover; border-radius: 8px; margin-bottom: 1rem;">` : '';
+
             return `
-                <div class="poll-results">
+                <div class="poll-card" style="border: 1px solid var(--border-color); padding: 1.5rem;">
+                    ${imageHtml}
+                    <span class="badge" style="margin-bottom: 0.5rem;">Closed Poll</span>
                     <h3>${poll.title}</h3>
-                    <div class="chart" style="margin-top:1.5rem;">
-                        ${poll.poll_options.map(opt => {
+                    <p style="color:var(--text-secondary);font-size:0.875rem;margin-bottom:1rem;">${poll.description || ''}</p>
+                    <div class="chart" style="margin-top:1rem;">
+                        ${(poll.poll_options || []).map(opt => {
                             const percent = totalVotes === 0 ? 0 : Math.round(((opt.vote_count || 0) / totalVotes) * 100);
                             return `
-                                <div class="bar-row" style="margin-bottom:1rem;">
+                                <div class="bar-row" style="margin-bottom:0.75rem;">
                                     <div style="display:flex;justify-content:space-between;margin-bottom:0.25rem;">
-                                        <span class="label" style="font-size:0.875rem;">${opt.option_text}</span>
-                                        <span class="percent" style="font-size:0.875rem;font-weight:600;">${percent}% (${opt.vote_count || 0})</span>
+                                        <span style="font-size:0.875rem;font-weight:500;">${opt.option_text}</span>
+                                        <span style="font-size:0.875rem;font-weight:600;">${percent}% (${opt.vote_count || 0})</span>
                                     </div>
-                                    <div class="bar-track" style="background:var(--border-color);height:8px;border-radius:4px;overflow:hidden;">
-                                        <div class="bar-fill" style="background:var(--primary-color);height:100%;width:${percent}%;transition:width 1s ease;"></div>
+                                    <div style="background:var(--border-color);height:8px;border-radius:4px;overflow:hidden;">
+                                        <div style="background:var(--primary-color);height:100%;width:${percent}%;transition:width 1s ease;"></div>
                                     </div>
                                 </div>
                             `;
                         }).join('')}
                     </div>
-                    <p style="margin-top:1rem;font-size:0.875rem;color:var(--text-secondary);">Total votes: ${totalVotes}</p>
+                    <p style="margin-top:0.75rem;font-size:0.75rem;color:var(--text-tertiary);">Final Result &bull; Total votes: ${totalVotes}</p>
                 </div>
             `;
         }).join('');
