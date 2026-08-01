@@ -86,7 +86,8 @@ export default async function handler(req, res) {
     const { poll_id, option_id } = body;
     if (!poll_id || !option_id) return error(res, 'Missing required fields', 400);
 
-    const voter_id = session.id;
+    const isValidUuid = typeof session?.id === 'string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(session.id);
+    const voter_id = isValidUuid ? session.id : null;
 
     const { error: err } = await db.from('poll_votes').insert([{ 
       poll_id, 
