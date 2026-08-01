@@ -8,48 +8,71 @@ export async function init() {
   const countdownContainer = document.getElementById('countdown');
 
   try {
-    const [eventsData, statsData, newsData, pollsData] = await Promise.all([
+    const [eventsRes, statsRes, newsRes, pollsRes] = await Promise.all([
       api.get('/api/public/events?upcoming=true'),
       api.get('/api/public/stats'),
       api.get('/api/public/news?limit=1'),
       api.get('/api/public/polls')
     ]);
 
-    if (eventsData?.data?.length > 0) {
-      const event = eventsData.data[0];
-      featuredContainer.innerHTML = `<h3>Featured: ${event.title}</h3><p>${event.description}</p>`;
-      // Countdown
-      const eventDate = new Date(event.date).getTime();
-      setInterval(() => {
-        const now = new Date().getTime();
-        const dist = eventDate - now;
-        if (dist < 0) {
-          countdownContainer.innerHTML = 'Event Started!';
-          return;
-        }
-        const d = Math.floor(dist / (1000 * 60 * 60 * 24));
-        const h = Math.floor((dist % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const m = Math.floor((dist % (1000 * 60 * 60)) / (1000 * 60));
-        const s = Math.floor((dist % (1000 * 60)) / 1000);
-        countdownContainer.innerHTML = `${d}d ${h}h ${m}m ${s}s`;
-      }, 1000);
+    const events = extractArray(eventsRes);
+    const stats = statsRes?.data || statsRes || {};
+    const news = extractArray(newsRes);
+    const polls = extractArray(pollsRes);
+
+    if (featuredContainer && events.length > 0) {
+      const event = events[0];
+      featuredContainer.innerHTML = `<h3>Featured: ${escapeHtml(event.title)}</h3><p>${escapeHtml(event.description || '')}</p>`;
+      if (countdownContainer && event.event_date) {
+        const eventDate = new Date(event.event_date).getTime();
+        setInterval(() => {
+          const now = new Date().getTime();
+          const dist = eventDate - now;
+          if (dist < 0) {
+            countdownContainer.innerHTML = 'Event Started!';
+            return;
+          }
+          const d = Math.floor(dist / (1000 * 60 * 60 * 24));
+          const h = Math.floor((dist % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          const m = Math.floor((dist % (1000 * 60 * 60)) / (1000 * 60));
+          const s = Math.floor((dist % (1000 * 60)) / 1000);
+          countdownContainer.innerHTML = `${d}d ${h}h ${m}m ${s}s`;
+        }, 1000);
+      }
     }
 
-    if (statsData?.data) {
-      statsContainer.innerHTML = `<p>Members: ${statsData.data.members}</p><p>Events: ${statsData.data.events}</p>`;
+    if (statsContainer && stats) {
+      statsContainer.innerHTML = `
+        <div style="display:flex; gap:2rem; justify-content:center;">
+          <div><strong style="font-size:1.5rem;">${stats.members || stats.membersCount || 0}</strong><br><span style="font-size:0.875rem; color:var(--text-secondary);">Active Members</span></div>
+          <div><strong style="font-size:1.5rem;">${stats.events || stats.eventsCount || 0}</strong><br><span style="font-size:0.875rem; color:var(--text-secondary);">Events Organized</span></div>
+        </div>
+      `;
     }
 
-    if (newsData?.data?.length > 0) {
-      newsContainer.innerHTML = `<p>Latest News: ${newsData.data[0].title}</p>`;
+    if (newsContainer && news.length > 0) {
+      newsContainer.innerHTML = `<p><strong>Latest Update:</strong> ${escapeHtml(news[0].title)}</p>`;
     }
 
-    if (pollsData?.data?.length > 0) {
-      const activePoll = pollsData.data.find(p => p.active);
+    if (pollContainer && polls.length > 0) {
+      const activePoll = polls.find(p => p.status === 'Active');
       if (activePoll) {
-        pollContainer.innerHTML = `<p>Poll: ${activePoll.question}</p>`;
+        pollContainer.innerHTML = `<p><strong>Featured Poll:</strong> ${escapeHtml(activePoll.title)} <a href="/polls.html" style="color:var(--accent-color); text-decoration:underline;">Vote Now &rarr;</a></p>`;
       }
     }
   } catch (err) {
-    console.error('Home init error', err);
+    console.error('Home page init error:', err);
+  }
+
+  function extractArray(res) {
+    if (!res) return [];
+    if (Array.isArray(res.data)) return res.data;
+    if (Array.isArray(res)) return res;
+    return [];
+  }
+
+  function escapeHtml(str) {
+    if (typeof str !== 'string') return str || '';
+    return str.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' })[m]);
   }
 }

@@ -15,7 +15,8 @@ export async function init() {
                 qs = params.toString() ? '?' + params.toString() : '';
             }
             
-            const projects = await api.get(`/api/projects${qs}`);
+            const res = await api.get(`/api/public/projects${qs}`);
+            const projects = res && res.ok && Array.isArray(res.data) ? res.data : (Array.isArray(res) ? res : []);
             renderProjects(projects);
         } catch (error) {
             console.error('Error loading projects:', error);

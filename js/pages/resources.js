@@ -28,7 +28,8 @@ export async function init() {
             if (categoryFilter && categoryFilter.value) params.append('category', categoryFilter.value);
             
             const qs = params.toString();
-            const resources = await api.get(`/api/resources${qs ? '?' + qs : ''}`);
+            const res = await api.get(`/api/public/resources${qs ? '?' + qs : ''}`);
+            const resources = res && res.ok && Array.isArray(res.data) ? res.data : (Array.isArray(res) ? res : []);
             renderResources(resources);
         } catch (error) {
             console.error('Error loading resources:', error);

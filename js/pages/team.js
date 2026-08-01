@@ -8,7 +8,8 @@ export async function init() {
     if (!teamContainer || !tabsContainer) return;
 
     try {
-        const teamMembers = await api.get('/api/team');
+        const res = await api.get('/api/public/team');
+        const teamMembers = res && res.ok && Array.isArray(res.data) ? res.data : (Array.isArray(res) ? res : []);
         const grouped = groupBy(teamMembers, 'category');
         
         // Define tab order

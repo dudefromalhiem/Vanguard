@@ -8,12 +8,17 @@ export async function init() {
     if (!wingId) return;
 
     try {
-        const [wing, team, events, resources] = await Promise.all([
-            api.get(`/api/wings/${wingId}`),
-            api.get(`/api/team?wingId=${wingId}`),
-            api.get(`/api/events?wingId=${wingId}&limit=5`),
-            api.get(`/api/resources?wingId=${wingId}&limit=5`)
+        const [wingRes, teamRes, eventsRes, resourcesRes] = await Promise.all([
+            api.get(`/api/public/wings/${wingId}`),
+            api.get(`/api/public/team?wingId=${wingId}`),
+            api.get(`/api/public/events?wingId=${wingId}&limit=5`),
+            api.get(`/api/public/resources?wingId=${wingId}&limit=5`)
         ]);
+
+        const wing = wingRes?.data || wingRes || {};
+        const team = teamRes && teamRes.ok && Array.isArray(teamRes.data) ? teamRes.data : (Array.isArray(teamRes) ? teamRes : []);
+        const events = eventsRes && eventsRes.ok && Array.isArray(eventsRes.data) ? eventsRes.data : (Array.isArray(eventsRes) ? eventsRes : []);
+        const resources = resourcesRes && resourcesRes.ok && Array.isArray(resourcesRes.data) ? resourcesRes.data : (Array.isArray(resourcesRes) ? resourcesRes : []);
 
         const titleEl = document.getElementById('wing-title');
         const descEl = document.getElementById('wing-description');

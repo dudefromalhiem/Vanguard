@@ -17,7 +17,8 @@ export async function init() {
             if (year) params.append('year', year);
             
             const queryString = params.toString();
-            const albums = await api.get(`/api/gallery${queryString ? '?' + queryString : ''}`);
+            const res = await api.get(`/api/public/gallery${queryString ? '?' + queryString : ''}`);
+            const albums = res && res.ok && Array.isArray(res.data) ? res.data : (Array.isArray(res) ? res : []);
             
             renderAlbums(albums);
         } catch (error) {
@@ -28,11 +29,15 @@ export async function init() {
 
     function renderAlbums(albums) {
         if (!galleryContainer) return;
+        if (!Array.isArray(albums) || albums.length === 0) {
+            galleryContainer.innerHTML = '<p style="color:var(--text-secondary);">No gallery albums found.</p>';
+            return;
+        }
         galleryContainer.innerHTML = albums.map(album => `
-            <div class="album-card" onclick="window.openAlbum('${album.id}')">
-                <img src="${album.coverImage || '/images/default-album.png'}" alt="${album.title}">
-                <h3>${album.title}</h3>
-                <p>${album.year} ${album.wing ? ' - ' + album.wing : ''}</p>
+            <div class="card hoverable" onclick="window.openAlbum('${album.id}')" style="padding:1.5rem; cursor:pointer;">
+                <img src="${album.cover_image || album.coverImage || '/images/default-album.png'}" alt="${album.title}" style="width:100%; max-height:180px; object-fit:cover; border-radius:4px; margin-bottom:0.75rem;">
+                <h3 style="font-family:'Lora',serif; margin-bottom:0.25rem;">${album.title}</h3>
+                <p style="color:var(--text-secondary); font-size:0.875rem;">${album.year || ''} ${album.wing ? ' &bull; ' + album.wing : ''}</p>
             </div>
         `).join('');
     }
