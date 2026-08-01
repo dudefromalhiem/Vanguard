@@ -37,11 +37,20 @@ export async function init() {
       e.preventDefault();
       const email = document.getElementById('admin-email').value;
       const password = document.getElementById('admin-password').value;
+      const errorDiv = document.getElementById('admin-login-error');
+      
+      if (errorDiv) errorDiv.style.display = 'none';
+
       const res = await api.post('/api/admin/login', { email, password });
-      if (res.success) {
+      if (res.ok) {
         showDashboard();
       } else {
-        alert('Login failed');
+        if (errorDiv) {
+          errorDiv.textContent = res.error || 'Invalid admin credentials';
+          errorDiv.style.display = 'block';
+        } else {
+          alert(res.error || 'Invalid admin credentials');
+        }
       }
     });
   }
