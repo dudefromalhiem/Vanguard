@@ -56,14 +56,14 @@ document.addEventListener('click', (e) => {
     if (modal) closeModal(modal.id);
   }
   if (e.target.classList.contains('modal-close') || e.target.closest('.modal-close')) {
-    const modal = e.target.closest('.modal');
+    const modal = e.target.closest('.modal, .gallery-lightbox');
     if (modal) closeModal(modal.id);
   }
 });
 
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
-    const active = document.querySelector('.modal.active');
+    const active = document.querySelector('.modal.active, .gallery-lightbox.active');
     if (active) closeModal(active.id);
   }
 });

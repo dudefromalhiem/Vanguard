@@ -28,14 +28,15 @@ import route_26 from './_routes/public/events.js';
 import route_27 from './_routes/public/faqs.js';
 import route_28 from './_routes/public/gallery.js';
 import route_29 from './_routes/public/news.js';
-import route_30 from './_routes/public/notifications.js';
-import route_31 from './_routes/public/partners.js';
-import route_32 from './_routes/public/polls.js';
-import route_33 from './_routes/public/projects.js';
-import route_34 from './_routes/public/resources.js';
-import route_35 from './_routes/public/search.js';
-import route_36 from './_routes/public/stats.js';
-import route_37 from './_routes/public/team.js';
+import route_30 from './_routes/public/live-news.js';
+import route_31 from './_routes/public/notifications.js';
+import route_32 from './_routes/public/partners.js';
+import route_33 from './_routes/public/polls.js';
+import route_34 from './_routes/public/projects.js';
+import route_35 from './_routes/public/resources.js';
+import route_36 from './_routes/public/search.js';
+import route_37 from './_routes/public/stats.js';
+import route_38 from './_routes/public/team.js';
 
 const routes = {
   '/api/admin/alumni': route_0,
@@ -68,14 +69,15 @@ const routes = {
   '/api/public/faqs': route_27,
   '/api/public/gallery': route_28,
   '/api/public/news': route_29,
-  '/api/public/notifications': route_30,
-  '/api/public/partners': route_31,
-  '/api/public/polls': route_32,
-  '/api/public/projects': route_33,
-  '/api/public/resources': route_34,
-  '/api/public/search': route_35,
-  '/api/public/stats': route_36,
-  '/api/public/team': route_37,
+  '/api/public/live-news': route_30,
+  '/api/public/notifications': route_31,
+  '/api/public/partners': route_32,
+  '/api/public/polls': route_33,
+  '/api/public/projects': route_34,
+  '/api/public/resources': route_35,
+  '/api/public/search': route_36,
+  '/api/public/stats': route_37,
+  '/api/public/team': route_38,
 };
 
 export default async function handler(req, res) {

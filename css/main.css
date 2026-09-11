@@ -41,6 +41,9 @@
   
   --transition-fast: 0.2s ease-in-out;
   --overlay-bg: rgba(249, 246, 238, 0.9);
+  --scrollbar-track: #EBE5D9;
+  --scrollbar-thumb: #8B0000;
+  --scrollbar-thumb-hover: #B22222;
 }
 
 [data-theme='dark'] {
@@ -67,12 +70,39 @@
   --info-text: #60a5fa;
 
   --overlay-bg: rgba(10, 25, 47, 0.9);
+  --scrollbar-track: #112240;
+  --scrollbar-thumb: #FF6B6B;
+  --scrollbar-thumb-hover: #FF8A8A;
 }
 
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+/* Consistent red scrollbars for page, panels, menus, tables, and modals. */
+* {
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  scrollbar-width: thin;
+}
+*::-webkit-scrollbar {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+*::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border: 2px solid var(--scrollbar-track);
+  border-radius: 999px;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
+*::-webkit-scrollbar-corner {
+  background: var(--scrollbar-track);
 }
 
 body {

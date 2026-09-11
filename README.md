@@ -64,7 +64,7 @@ For Vercel deployment, set these in Project Settings > Environment Variables.
 ### 4. Local Development
 ```bash
 npm run dev
-# Opens at http://localhost:3000
+# Opens at http://localhost:3000 with the API routes enabled
 ```
 
 ### 5. Deploy to Vercel

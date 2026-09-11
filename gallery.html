@@ -19,21 +19,31 @@
         </div>
         
         <div class="filter-bar" id="filter-bar">
-          <select id="wing-select" class="form-select">
+          <select id="wing-filter" class="form-select">
             <option value="">All Wings</option>
           </select>
-          <select id="year-select" class="form-select">
+          <select id="year-filter" class="form-select">
             <option value="">All Years</option>
           </select>
         </div>
         
-        <div id="gallery-grid" class="cards-grid">
-          <div id="albums-grid"></div>
-        </div>
+        <div id="gallery-container" class="cards-grid"></div>
       </div>
     </section>
     
-    <div id="lightbox" class="modal hidden"></div>
+    <div id="lightbox" class="gallery-lightbox">
+      <div class="gallery-lightbox-dialog">
+        <div class="gallery-lightbox-header">
+          <div>
+            <p class="gallery-lightbox-eyebrow">Gallery album</p>
+            <div id="lightbox-title" class="gallery-lightbox-title">Induction Program</div>
+            <p id="lightbox-count" class="gallery-lightbox-count"></p>
+          </div>
+          <button class="modal-close gallery-lightbox-close" aria-label="Close gallery" title="Close gallery">&times;</button>
+        </div>
+        <div id="lightbox-content"></div>
+      </div>
+    </div>
   </main>
   <footer data-component="footer"></footer>
   <div data-component="search-overlay"></div>
