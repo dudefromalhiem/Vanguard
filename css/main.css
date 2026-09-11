@@ -81,6 +81,13 @@
   padding: 0;
 }
 
+button, input, select, textarea { font: inherit; }
+button, a, select, input, textarea { -webkit-tap-highlight-color: transparent; }
+:focus-visible {
+  outline: 3px solid var(--accent-color);
+  outline-offset: 3px;
+}
+
 /* Consistent red scrollbars for page, panels, menus, tables, and modals. */
 * {
   scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
@@ -180,6 +187,13 @@ p {
 }
 .container-wide {
   max-width: 1200px;
+}
+
+@media (max-width: 767px) {
+  .container, .container-wide { padding-left: 1rem; padding-right: 1rem; }
+  h1 { font-size: clamp(2.1rem, 10vw, 3rem); }
+  h2 { font-size: clamp(1.75rem, 8vw, 2.25rem); }
+  p { font-size: 1rem; }
 }
 
 .sr-only {

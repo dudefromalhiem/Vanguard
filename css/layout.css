@@ -45,6 +45,12 @@
   color: var(--text-tertiary);
 }
 
+@media (max-width: 767px) {
+  .section { padding: 2.75rem 0; }
+  .section-header { margin-bottom: 1.5rem; }
+  .section-header p { font-size: 1rem; }
+}
+
 /* Card Grids */
 .cards-grid {
   display: grid;
@@ -56,6 +62,10 @@
 @media (min-width: 640px) {
   .grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
   .cards-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 639px) {
+  .cards-grid { gap: 1rem; }
 }
 
 @media (min-width: 768px) {

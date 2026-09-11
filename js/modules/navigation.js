@@ -5,8 +5,9 @@ export function initNavigation() {
 
   if (hamburger && drawer) {
     hamburger.addEventListener('click', () => {
-      drawer.classList.toggle('open');
-      hamburger.classList.toggle('active');
+      const isOpen = drawer.classList.toggle('open');
+      hamburger.classList.toggle('active', isOpen);
+      hamburger.setAttribute('aria-expanded', String(isOpen));
       document.body.classList.toggle('drawer-open');
     });
 
@@ -23,6 +24,7 @@ export function initNavigation() {
   function closeDrawer() {
     if (drawer) drawer.classList.remove('open');
     if (hamburger) hamburger.classList.remove('active');
+    if (hamburger) hamburger.setAttribute('aria-expanded', 'false');
     document.body.classList.remove('drawer-open');
   }
 

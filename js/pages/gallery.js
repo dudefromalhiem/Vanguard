@@ -25,11 +25,13 @@ export async function init() {
         const year = yearFilter?.value || '';
         const filteredAlbums = albums.filter((album) => (!wing || album.wing === wing) && (!year || String(album.year) === year));
         galleryContainer.innerHTML = filteredAlbums.length ? filteredAlbums.map((album) => `
-            <div class="card hoverable" data-album-id="${album.id}" style="padding:1.5rem; cursor:pointer;">
-                <img src="${album.cover_image || album.coverImage || album.images?.[0]?.url || './vanguardlogo.jpeg'}" alt="${album.title}" style="width:100%; max-height:180px; object-fit:cover; border-radius:4px; margin-bottom:0.75rem;">
-                <h3 style="font-family:'Lora',serif; margin-bottom:0.25rem;">${album.title}</h3>
-                <p style="color:var(--text-secondary); font-size:0.875rem;">${album.year || ''}</p>
-            </div>
+            <button class="card hoverable gallery-album-card" type="button" data-album-id="${album.id}" aria-label="Open ${album.title} gallery">
+                <img src="${album.cover_image || album.coverImage || album.images?.[0]?.url || './vanguardlogo.jpeg'}" alt="${album.title}" loading="lazy">
+                <span class="gallery-album-content">
+                    <strong>${album.title}</strong>
+                    <span>${album.year || ''} &bull; ${album.images?.length || 0} photos</span>
+                </span>
+            </button>
         `).join('') : '<p style="color:var(--text-secondary);">No gallery albums found.</p>';
     }
 

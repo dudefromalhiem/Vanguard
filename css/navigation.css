@@ -297,10 +297,10 @@
 /* Mobile Drawer */
 .mobile-drawer {
   position: fixed;
-  top: 4.5rem;
+  top: 5rem;
   left: 0;
   width: 100%;
-  height: calc(100vh - 4.5rem);
+  height: calc(100vh - 5rem);
   background: var(--accent-color);
   background-image: url("data:image/svg+xml,%3Csvg width='12' height='12' viewBox='0 0 12 12' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 12L12 1M-1 10L10 -1M3 14L14 3' stroke='%23ffffff' stroke-opacity='0.08' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
   z-index: 40;
@@ -312,6 +312,10 @@
   visibility: hidden;
   transition: all var(--transition-fast);
   overflow-y: auto;
+}
+
+@media (min-width: 768px) {
+  .mobile-drawer { top: 6rem; height: calc(100vh - 6rem); }
 }
 .mobile-drawer.open {
   transform: translateY(0);
