@@ -22,25 +22,31 @@ const FEEDS = {
 
 const SOURCE_PROFILES = {
   'The Hindu': {
-    politicalSpectrum: 'Centre',
-    propagandaRisk: 'Not rated',
-    indexName: 'Ad Fontes Media Bias Chart',
-    indexUrl: 'https://adfontesmedia.com/interactive-media-bias-chart/',
-    note: 'Bias and reliability indexes do not publish a defensible propaganda probability for this outlet.'
+    politicalSpectrum: 'Left-Center',
+    factualReporting: 'Mostly Factual',
+    credibility: 'High Credibility',
+    propagandaRisk: 'Low proxy risk',
+    indexName: 'Media Bias/Fact Check (MBFC)',
+    indexUrl: 'https://mediabiasfactcheck.com/the-hindu/',
+    note: 'MBFC rates this source Left-Center, Mostly Factual, and High Credibility. Proxy risk is an interpretation, not an MBFC probability.'
   },
   'The Indian Express': {
-    politicalSpectrum: 'Centre',
-    propagandaRisk: 'Not rated',
-    indexName: 'Ad Fontes Media Bias Chart',
-    indexUrl: 'https://adfontesmedia.com/interactive-media-bias-chart/',
-    note: 'Bias and reliability indexes do not publish a defensible propaganda probability for this outlet.'
+    politicalSpectrum: 'Left-Center',
+    factualReporting: 'Mostly Factual',
+    credibility: 'High Credibility',
+    propagandaRisk: 'Low proxy risk',
+    indexName: 'Media Bias/Fact Check (MBFC)',
+    indexUrl: 'https://mediabiasfactcheck.com/the-indian-express/',
+    note: 'Bias and reliability ratings describe editorial tendencies and accuracy; they are not a literal propaganda probability.'
   },
   'Press Information Bureau': {
     politicalSpectrum: 'Government source',
-    propagandaRisk: 'Not rated',
-    indexName: 'Ad Fontes Media Bias Chart',
-    indexUrl: 'https://adfontesmedia.com/interactive-media-bias-chart/',
-    note: 'Official government communication, not an independent news outlet; assess claims against independent reporting.'
+    factualReporting: 'Official claims; independently verify',
+    credibility: 'Not an independent newsroom',
+    propagandaRisk: 'Higher context risk',
+    indexName: 'MBFC methodology and source database',
+    indexUrl: 'https://mediabiasfactcheck.com/methodology/',
+    note: 'Official government communication is not independent journalism. Compare claims with independent reporting.'
   }
 };
 
@@ -78,7 +84,15 @@ function parseFeed(xml, source, category) {
       publishedAt,
       source,
       category,
-      sourceProfile: SOURCE_PROFILES[source]
+      sourceProfile: SOURCE_PROFILES[source] || {
+        politicalSpectrum: 'Unclassified',
+        factualReporting: 'Unclassified',
+        credibility: 'Unclassified',
+        propagandaRisk: 'Review required',
+        indexName: 'MBFC methodology',
+        indexUrl: 'https://mediabiasfactcheck.com/methodology/',
+        note: 'No source profile is available; review the original article and corroborate important claims.'
+      }
     } : null;
   }).filter(Boolean);
 }

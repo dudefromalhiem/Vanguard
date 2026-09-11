@@ -55,7 +55,9 @@ export async function init() {
                         <p style="color:var(--text-tertiary); font-size:0.875rem;">${escapeHtml(formatDate(article.publishedAt))} &bull; ${escapeHtml(article.source)} &bull; ${escapeHtml(article.category)}</p>
                         <div class="news-source-meta" title="${escapeHtml(article.sourceProfile?.note || '')}">
                             <span><strong>Political spectrum:</strong> ${escapeHtml(article.sourceProfile?.politicalSpectrum || 'Not classified')}</span>
-                            <span><strong>Propaganda risk:</strong> ${escapeHtml(article.sourceProfile?.propagandaRisk || 'Not rated')}</span>
+                            <span><strong>Factual reporting:</strong> ${escapeHtml(article.sourceProfile?.factualReporting || 'Review required')}</span>
+                            <span><strong>Credibility:</strong> ${escapeHtml(article.sourceProfile?.credibility || 'Review required')}</span>
+                            <span><strong>Propaganda-risk proxy:</strong> ${escapeHtml(article.sourceProfile?.propagandaRisk || 'Review required')}</span>
                             <a href="${escapeHtml(article.sourceProfile?.indexUrl || 'https://adfontesmedia.com/interactive-media-bias-chart/')}" target="_blank" rel="noopener noreferrer">Based on ${escapeHtml(article.sourceProfile?.indexName || 'Ad Fontes Media Bias Chart')}</a>
                         </div>
                         <p style="margin-top:0.75rem;">${escapeHtml(article.description || 'Read the original article on the publisher website.')}</p>
