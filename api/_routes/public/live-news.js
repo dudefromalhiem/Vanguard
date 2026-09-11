@@ -20,6 +20,30 @@ const FEEDS = {
   ],
 };
 
+const SOURCE_PROFILES = {
+  'The Hindu': {
+    politicalSpectrum: 'Centre',
+    propagandaRisk: 'Not rated',
+    indexName: 'Ad Fontes Media Bias Chart',
+    indexUrl: 'https://adfontesmedia.com/interactive-media-bias-chart/',
+    note: 'Bias and reliability indexes do not publish a defensible propaganda probability for this outlet.'
+  },
+  'The Indian Express': {
+    politicalSpectrum: 'Centre',
+    propagandaRisk: 'Not rated',
+    indexName: 'Ad Fontes Media Bias Chart',
+    indexUrl: 'https://adfontesmedia.com/interactive-media-bias-chart/',
+    note: 'Bias and reliability indexes do not publish a defensible propaganda probability for this outlet.'
+  },
+  'Press Information Bureau': {
+    politicalSpectrum: 'Government source',
+    propagandaRisk: 'Not rated',
+    indexName: 'Ad Fontes Media Bias Chart',
+    indexUrl: 'https://adfontesmedia.com/interactive-media-bias-chart/',
+    note: 'Official government communication, not an independent news outlet; assess claims against independent reporting.'
+  }
+};
+
 function decodeXml(value = '') {
   return value
     .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1')
@@ -47,7 +71,15 @@ function parseFeed(xml, source, category) {
     const link = tagValue(item, 'link');
     const description = stripHtml(tagValue(item, 'description'));
     const publishedAt = tagValue(item, 'pubDate') || tagValue(item, 'published');
-    return title && link ? { title, link, description, publishedAt, source, category } : null;
+    return title && link ? {
+      title,
+      link,
+      description,
+      publishedAt,
+      source,
+      category,
+      sourceProfile: SOURCE_PROFILES[source]
+    } : null;
   }).filter(Boolean);
 }
 

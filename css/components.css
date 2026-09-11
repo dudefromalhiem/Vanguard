@@ -216,6 +216,29 @@ a.card:hover .card-image { filter: grayscale(0%) contrast(100%); }
 /* Empty state */
 .empty-state { text-align: center; padding: 4rem 1.5rem; color: var(--text-tertiary); font-family: 'Lora', serif; font-style: italic; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); }
 
+.news-disclaimer {
+  max-width: 820px;
+  padding: 0.75rem 1rem;
+  border-left: 3px solid var(--accent-color);
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+.news-source-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+}
+.news-source-meta a {
+  color: var(--accent-color);
+  text-decoration: underline;
+}
+
 /* Filter Bar */
 .filter-bar { display: flex; flex-wrap: wrap; gap: 1.5rem; margin-bottom: 3rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); align-items: center; justify-content: space-between; }
 .filter-bar .form-group { margin-bottom: 0; }
