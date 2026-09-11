@@ -33,11 +33,13 @@ export async function init() {
             return;
         }
         eventsList.innerHTML = events.map(e => `
-            <div class="card hoverable" style="padding:1.5rem; margin-bottom:1rem; cursor:pointer;" onclick="window.showEventDetail('${e.id}')">
-                <h3 style="font-family:'Lora',serif; margin-bottom:0.5rem;">${e.title}</h3>
-                <p style="color:var(--text-secondary); font-size:0.875rem;">📅 ${formatDate(e.event_date || e.date)} ${e.location ? '&bull; 📍 ' + e.location : ''}</p>
-                <p style="color:var(--text-tertiary); font-size:0.875rem; margin-top:0.5rem;">${e.description || ''}</p>
-            </div>
+            <article class="card hoverable event-card">
+                <img src="./vanguardlogo.jpeg" class="card-image" alt="Placeholder poster for ${e.title}">
+                <div class="card-body">
+                    <h3>${e.title}</h3>
+                    <a href="#" class="btn btn-primary" aria-label="Register for ${e.title}">Register</a>
+                </div>
+            </article>
         `).join('');
     }
 

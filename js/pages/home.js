@@ -22,8 +22,10 @@ export async function init() {
 
     if (featuredContainer && events.length > 0) {
       const event = events[0];
+      featuredContainer.classList.remove('hidden');
       featuredContainer.innerHTML = `<h3>Featured: ${escapeHtml(event.title)}</h3><p>${escapeHtml(event.description || '')}</p>`;
       if (countdownContainer && event.event_date) {
+        countdownContainer.classList.remove('hidden');
         const eventDate = new Date(event.event_date).getTime();
         setInterval(() => {
           const now = new Date().getTime();
@@ -41,7 +43,8 @@ export async function init() {
       }
     }
 
-    if (statsContainer && stats) {
+    if (statsContainer && Object.keys(stats).length > 0) {
+      statsContainer.classList.remove('hidden');
       statsContainer.innerHTML = `
         <div style="display:flex; gap:2rem; justify-content:center;">
           <div><strong style="font-size:1.5rem;">${stats.members || stats.membersCount || 0}</strong><br><span style="font-size:0.875rem; color:var(--text-secondary);">Active Members</span></div>
@@ -51,12 +54,14 @@ export async function init() {
     }
 
     if (newsContainer && news.length > 0) {
+      newsContainer.classList.remove('hidden');
       newsContainer.innerHTML = `<p><strong>Latest Update:</strong> ${escapeHtml(news[0].title)}</p>`;
     }
 
     if (pollContainer && polls.length > 0) {
       const activePoll = polls.find(p => p.status === 'Active');
       if (activePoll) {
+        pollContainer.classList.remove('hidden');
         pollContainer.innerHTML = `<p><strong>Featured Poll:</strong> ${escapeHtml(activePoll.title)} <a href="/polls.html" style="color:var(--accent-color); text-decoration:underline;">Vote Now &rarr;</a></p>`;
       }
     }
